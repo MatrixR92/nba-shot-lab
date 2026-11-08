@@ -62,8 +62,8 @@ h1{font:800 clamp(38px,6vw,58px)/.92 var(--fh);margin:8px 0 12px}
 .hex{transform-box:fill-box;transform-origin:center;animation:pop .4s ease both}@keyframes pop{from{opacity:0;transform:scale(.3)}}
 .mk{fill:var(--act);fill-opacity:.85;stroke:var(--mkst);stroke-width:.7}.ms{fill:none;stroke:var(--ms);stroke-opacity:.75;stroke-width:1.4}
 #layer{animation:fade .35s ease both}@keyframes fade{from{opacity:0}}
-#legend,.lgd{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--mut)}
-#legend .bar,.lgd .bar{flex:0 0 130px;height:8px;border-radius:4px;background:linear-gradient(90deg,#3b82f6,#94a3b8,#ff6a3d)}
+#legend,.lgd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:10px;font-size:13px;color:var(--mut)}
+#legend .bar,.lgd .bar{flex:0 0 90px;height:8px;border-radius:4px;background:linear-gradient(90deg,#3b82f6,#94a3b8,#ff6a3d)}
 h2{font:700 22px/1 var(--fh);margin-bottom:14px}h2 small{font:400 13px var(--fb);color:var(--mut);margin-left:6px}
 .hist{display:flex;gap:6px;min-height:180px}.hist>div{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}
 .hist em{font-style:normal;font-size:11px;color:var(--mut);height:16px;white-space:nowrap}.hist u{flex:1;width:100%;display:flex;align-items:flex-end}
@@ -82,10 +82,11 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
 .rw b{font:700 24px/1 var(--fh);justify-self:start;padding:3px 9px;margin-left:-9px;border-radius:8px}.rw b:nth-of-type(2){justify-self:end;margin:0 -9px 0 0}.rw b.w{background:var(--c);color:var(--onc)}.rw b.l{color:var(--mut)}.rw span{font-size:13px;color:var(--mut)}
 .tr{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:2px}.tr i{display:block;height:7px;border-radius:4px}.tr i:first-child{justify-self:end}
 .one{max-width:calc(50% - 6px);margin:0 auto}.one+.lgd{justify-content:center}
+#legend span,.lgd span{white-space:nowrap}.note{margin-left:auto}
 .sec{margin-top:24px}.hist u{gap:2px}.hist u i{flex:1;width:auto}
 @media(max-width:700px){#cards,.two{grid-template-columns:1fr}.one{max-width:none}}
 @media(max-width:860px){main{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "c" "d";grid-template-rows:auto}.ph{flex-basis:40%}}
-@media(max-width:560px){.hist{gap:3px}.hist small{display:none}.hist em,.hist span{font-size:10px}}
+@media(max-width:560px){.note{margin-left:0;flex-basis:100%}.hist{gap:3px}.hist small{display:none}.hist em,.hist span{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -198,7 +199,7 @@ function heatH(a,lg){let h='';
   return h}
 function court(a,lg){
   const el=$('#layer'),V=S.view,lgd=$('#legend');let h='';
-  lgd.innerHTML=V=='pts'?'<span>● Segnato</span><span>✕ Sbagliato</span>':`<span>Sotto la media NBA</span><div class="bar"></div><span>Sopra la media NBA</span><span>· Dimensione = frequenza</span>`;
+  lgd.innerHTML=V=='pts'?'<span>● Segnato</span><span>✕ Sbagliato</span>':`<span>Sotto la media</span><div class="bar"></div><span>Sopra la media</span><span class="note">Dimensione = frequenza</span>`;
   if(!a.length){el.innerHTML='<text x="0" y="-200" text-anchor="middle" fill="#8b99ad" font-size="16">Nessun tiro con questi filtri</text>';return}
   if(V=='pts'){
     let m='',x='';
@@ -253,8 +254,8 @@ function drawCmp(){
   $('#cards').innerHTML=mini(cur,season,ca,'a')+mini(cur2,season2,cb,'b');
   const box=(n,c,x,l)=>`<div class="bx"><h3 class="tc" style="--c:${c}">${n}</h3>${svgC(x.length?heatH(x,l):'')}</div>`;
   $('#cout').innerHTML=S.cv=='side'
-    ?`<div class="two">${box(na,ca,a,la)}${box(nb,cb,b,lb)}</div><div class="lgd"><span>Sotto la media NBA</span><div class="bar"></div><span>Sopra la media NBA</span><span>· Dimensione = frequenza</span></div>`
-    :`<div class="one">${svgC(diffH(a,b,la,ca,cb))}</div>`+`<div class="lgd"><span class="tc" style="--c:${ca}">■ Meglio ${na}</span><span class="tc" style="--c:${cb}">■ Meglio ${nb}</span><span>· Solo dove entrambi hanno tirato</span></div>`;
+    ?`<div class="two">${box(na,ca,a,la)}${box(nb,cb,b,lb)}</div><div class="lgd"><span>Sotto la media</span><div class="bar"></div><span>Sopra la media</span><span class="note">Dimensione = frequenza</span></div>`
+    :`<div class="one">${svgC(diffH(a,b,la,ca,cb))}</div>`+`<div class="lgd"><span class="tc" style="--c:${ca}">■ Meglio ${na}</span><span class="tc" style="--c:${cb}">■ Meglio ${nb}</span><span class="note">Solo dove entrambi hanno tirato</span></div>`;
   $('#ctab').innerHTML=tbl(a,b,ca,cb);$('#cdist').innerHTML=cdist(a,b,ca,cb);
 }
 async function pickCmp(p){
