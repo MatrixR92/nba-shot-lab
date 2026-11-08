@@ -88,6 +88,14 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
 .pop[hidden]{display:none}.pop button{background:none;border:0;text-align:left;padding:10px 12px;border-radius:8px;cursor:pointer}.pop button:hover{background:var(--hov)}.pop button[hidden]{display:none}
 #opp{font-size:14px;padding:6px 34px 6px 12px}
 .cmt:empty{display:none}.cmt ul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px}.cmt li{background:var(--tile);border-radius:10px;padding:8px 12px}.cmt b{color:var(--act)}
+.tip{position:absolute;left:10px;bottom:10px;max-width:70%;z-index:2;background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--line);border-radius:12px;padding:10px 30px 10px 12px;font-size:13px;line-height:1.4;backdrop-filter:blur(4px)}
+.tip[hidden]{display:none}.tip b{display:block;font:700 18px/1.1 var(--fh);margin-bottom:2px}.tip .ok{color:var(--act);font-weight:600}.tip .ko{color:var(--mut);font-weight:600}
+.tip button{position:absolute;top:4px;right:6px;background:none;border:0;color:var(--mut);cursor:pointer;font-size:18px;line-height:1}
+.ring{fill:none;stroke:var(--txt);stroke-width:2}
+.rpb{display:flex;align-items:center;gap:12px;margin-top:14px}
+.rpb button{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:var(--acc);color:#0a0e15;cursor:pointer;display:grid;place-items:center}
+.rpb input{flex:1;min-width:0;accent-color:var(--acc)}.rpl{margin-top:6px;font-size:13px;color:var(--mut)}
+#court.rp .hex{animation:none}
 .sec{margin-top:24px}
 #more{grid-area:x;display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
 .hw{display:grid;grid-template-columns:minmax(0,130px) 1fr 40px 62px;gap:10px;align-items:center;margin-bottom:12px;font-size:14px}
@@ -128,6 +136,7 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
       <button data-v="1" title="Solo segnati" aria-label="Solo segnati"><svg viewBox="0 0 14 14" width="15" height="15"><circle cx="7" cy="7" r="5" fill="currentColor"/></svg></button>
       <button data-v="0" title="Solo sbagliati" aria-label="Solo sbagliati"><svg viewBox="0 0 14 14" width="15" height="15"><path d="M2.5 2.5l9 9M11.5 2.5l-9 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     </div>
+    <div class="tip" id="tip" hidden></div>
     <svg id="court" viewBox="-250 -417.5 500 470" role="img" aria-label="Mezzo campo con i tiri del giocatore">
       <g class="ln" transform="scale(1,-1)" fill="none" stroke-width="2">
         <rect x="-250" y="-52.5" width="500" height="470"/>
@@ -135,9 +144,11 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
         <path d="M-60 137.5A60 60 0 0 1 60 137.5" stroke-dasharray="7 7"/>
         <circle r="7.5"/>
       </g>
-      <g id="layer"></g>
+      <g id="layer"></g><g id="hl"></g>
     </svg></div>
     <div id="legend"></div>
+    <div class="rpb"><button id="rpp" aria-label="Riproduci la stagione" title="Riproduci la stagione"></button><input type="range" id="rps" min="0" max="0" value="0" aria-label="Avanzamento della stagione"></div>
+    <div class="rpl" id="rpl"></div>
     <div class="cmt" id="cmt"></div>
   </section>
   <section class="card dd" id="dist"></section>
@@ -153,7 +164,7 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
 const $=s=>document.querySelector(s),DATA='data/';
 const COL={37:'#E03A3E',38:'#2FB463',39:'#FDBB30',40:'#B4975A',41:'#CE1141',42:'#00A3E0',43:'#FEC524',44:'#FFC72C',45:'#CE1141',46:'#E8334A',47:'#FDB927',48:'#F9423A',49:'#2EBD59',50:'#78BE20',51:'#A1A1AA',52:'#F58426',53:'#0F96E6',54:'#FDBB30',55:'#2E8BE6',56:'#E56020',57:'#E03A3E',58:'#8E6DD0',59:'#C4CED4',60:'#29A3F2',61:'#CE1141',62:'#F9A01B',63:'#5D76A9',64:'#E31837',65:'#E8334A',66:'#00A3B8'};
 const FALL='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1e293b"/><circle cx="50" cy="38" r="18" fill="#475569"/><path d="M14 100c4-30 20-38 36-38s32 8 36 38z" fill="#475569"/></svg>');
-const S={view:'heat',st:'a',ty:'a',rs:'a',q:'a',cv:'side',cmp:0,tgt:'b',opp:''},cache=new Map();
+const S={view:'heat',st:'a',ty:'a',rs:'a',q:'a',cv:'side',cmp:0,tgt:'b',opp:'',rp:null},cache=new Map();
 let P=[],T={},L={},M={},cur,season,sh,cur2,season2,sh2;
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const J=u=>fetch(u).then(r=>{if(!r.ok)throw Error(u);return r.json()});
@@ -191,10 +202,10 @@ async function load(){
   const k=season+'/'+cur.id;
   if(!cache.has(k))cache.set(k,J(`${DATA}shots/${k}.json`));
   try{sh=await cache.get(k)}catch(e){cache.delete(k);$('#layer').innerHTML='<text x="0" y="-200" text-anchor="middle" fill="#8b99ad" font-size="16">Dati non trovati per questa stagione</text>';return}
-  draw();
+  resetRp();draw();
 }
-const F=(d=sh)=>d.shots.filter(x=>(S.st=='a'||x[10]==S.st)&&(!S.opp||d.lookups.opp[x[7]]==S.opp)&&(S.ty=='a'||x[5]==S.ty)&&(S.q=='a'||(S.q==5?x[4]>=5:x[4]==S.q)));
-function draw(){if(S.cmp)return drawCmp();fillOpp();pushHash();const a=F(),lg=lgs(season);stats(a);court(a,lg);dist(a);$('#cmt').innerHTML=commento(a,lg);$('#how').innerHTML=how(a);$('#trd').innerHTML=trend(a)}
+const F=(d=sh)=>d.shots.filter(x=>(S.st=='a'||x[10]==S.st)&&(!S.opp||d.lookups.opp[x[7]]==S.opp)&&(S.rp==null||x[6]<=S.rp)&&(S.ty=='a'||x[5]==S.ty)&&(S.q=='a'||(S.q==5?x[4]>=5:x[4]==S.q)));
+function draw(){if(S.cmp)return drawCmp();fillOpp();pushHash();const a=F(),lg=lgs(season);stats(a);clearTip();court(a,lg);dist(a);$('#cmt').innerHTML=commento(a,lg);$('#how').innerHTML=how(a);$('#trd').innerHTML=trend(a)}
 function calc(a){
   const n=a.length,mk=a.reduce((t,x)=>t+x[2],0),t3=a.filter(x=>x[5]==3),m3=t3.reduce((t,x)=>t+x[2],0);
   return[['Tiri',n,''],['FG%',n?100*mk/n:0,'%'],['3P%',t3.length?100*m3/t3.length:0,'%'],['eFG%',n?100*(mk+.5*m3)/n:0,'%'],['Distanza media',n?a.reduce((t,x)=>t+x[3],0)/n:0,' ft'],['Quota da 3',n?100*t3.length/n:0,'%']]}
@@ -217,12 +228,12 @@ function heatH(a,lg){let h='';
     }
   return h}
 function court(a,lg){
-  const el=$('#layer'),V=S.view,lgd=$('#legend');let h='';
+  const el=$('#layer'),V=S.view,lgd=$('#legend');let h='';VIS=[];
   lgd.innerHTML=V=='pts'?'<span>● Segnato</span><span>✕ Sbagliato</span>':`<span>Sotto la media</span><div class="bar"></div><span>Sopra la media</span><span class="note">Dimensione = frequenza</span>`;
   if(!a.length){el.innerHTML='<text x="0" y="-200" text-anchor="middle" fill="#8b99ad" font-size="16">Nessun tiro con questi filtri</text>';return}
   if(V=='pts'){
     let m='',x='';
-    for(const s of S.rs=='a'?a:a.filter(t=>t[2]==S.rs)){const X=s[0],Y=-s[1];if(s[2])m+=`M${X-3.4} ${Y}a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0`;else x+=`M${X-2.6} ${Y-2.6}l5.2 5.2M${X-2.6} ${Y+2.6}l5.2 -5.2`}
+    VIS=S.rs=='a'?a:a.filter(t=>t[2]==S.rs);for(const s of VIS){const X=s[0],Y=-s[1];if(s[2])m+=`M${X-3.4} ${Y}a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0`;else x+=`M${X-2.6} ${Y-2.6}l5.2 5.2M${X-2.6} ${Y+2.6}l5.2 -5.2`}
     h=`<path class="mk" d="${m}"/><path class="ms" d="${x}"/>`;
   }else if(V=='heat'){
     h=heatH(a,lg);
@@ -288,12 +299,12 @@ $('#cmpv').addEventListener('change',async e=>{const t=e.target.dataset.t;if(!t)
 $('#cmpv').addEventListener('click',e=>{const b=e.target.closest('.chg');if(!b)return;S.tgt=b.dataset.t;q.placeholder='Scegli il giocatore da sostituire';q.focus()});
 async function setMode(v){
   if(+v==S.cmp)return;
-  S.cmp=+v;$('#modes').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==S.cmp));$('main').classList.toggle('cmp',!!S.cmp);$('#cmpv').hidden=!S.cmp;syncRs();
+  S.cmp=+v;if(S.cmp){stopRp();S.rp=null}$('#modes').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==S.cmp));$('main').classList.toggle('cmp',!!S.cmp);$('#cmpv').hidden=!S.cmp;syncRs();
   if(S.cmp){
     $('#cmpf').appendChild($('#fl'));
     if(!cur2){cur2=P.filter(x=>x!==cur&&x.s[season]).sort((x,y)=>y.s[season].fga-x.s[season].fga)[0];season2=season}
     [sh,sh2]=await Promise.all([sh||shots(cur,season),shots(cur2,season2)]);drawCmp();
-  }else{$('.cc').insertBefore($('#fl'),$('.cw'));draw()}
+  }else{$('.cc').insertBefore($('#fl'),$('.cw'));resetRp();draw()}
 }
 $('#modes').onclick=e=>{const b=e.target.closest('button');if(b)setMode(b.dataset.v)};
 const NM={'Restricted Area':'sotto canestro','In The Paint (Non-RA)':'area (fuori dal semicerchio)','Mid-Range':'mid-range','Corner 3':'angoli da 3','Above the Break 3':'da 3 dall\'arco'};
@@ -336,9 +347,9 @@ async function exportImg(){
   let fs=108;do{x.font=`800 ${fs}px ${cn}`;fs-=4}while(x.measureText(cur.name).width>960&&fs>40);
   x.fillStyle='#e8edf5';x.fillText(cur.name,60,205);
   const VN={pts:'Punti',heat:'Heatmap',zone:'Zone'},tm=(T[cur.s[season].tid]||{}).name||'';
-  const sub=[tm,season,VN[S.view],S.st=='0'?'Regular season':S.st=='1'?'Playoff':'',S.ty=='2'?'Tiri da 2':S.ty=='3'?'Tiri da 3':'',S.q!='a'?(S.q==5?'OT':S.q+'° quarto'):'',S.opp?'vs '+S.opp:''].filter(Boolean).join(' · ');
+  const sub=[tm,season,VN[S.view],S.st=='0'?'Regular season':S.st=='1'?'Playoff':'',S.ty=='2'?'Tiri da 2':S.ty=='3'?'Tiri da 3':'',S.q!='a'?(S.q==5?'OT':S.q+'° quarto'):'',S.opp?'vs '+S.opp:'',S.rp!=null?'fino al '+dl(S.rp):''].filter(Boolean).join(' · ');
   x.font=`500 30px ${bf}`;x.fillStyle='#8b99ad';x.fillText(sub,60,255);
-  const sv=$('#court').cloneNode(true);sv.removeAttribute('id');sv.setAttribute('width',960);sv.setAttribute('height',902);
+  const sv=$('#court').cloneNode(true);sv.removeAttribute('id');sv.querySelector('#hl').innerHTML='';sv.setAttribute('width',960);sv.setAttribute('height',902);
   sv.insertAdjacentHTML('afterbegin',`<style>.ln{stroke:#ffffff4d}.mk{fill:${acc};fill-opacity:.85;stroke:#0a0e15;stroke-width:.7}.ms{fill:none;stroke:#9fb0c8;stroke-opacity:.75;stroke-width:1.4}</style>`);
   const im=new Image();await new Promise((ok,ko)=>{im.onload=ok;im.onerror=ko;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(sv))});
   x.save();x.beginPath();x.roundRect?x.roundRect(60,290,960,902,28):x.rect(60,290,960,902);x.clip();
@@ -379,6 +390,33 @@ function trend(a){
   const full=R.map((v,i)=>({v,i})).filter(o=>o.i>=W-1&&o.i>=s0),b=[...full].sort((x,y)=>y.v-x.v)[0],w=[...full].sort((x,y)=>x.v-y.v)[0];
   const note=full.length>1?`<ul><li><b>Miglior periodo:</b> ${b.v.toFixed(0)}% nelle ${W} partite fino al ${dl(G[b.i].d)}</li><li><b>Periodo più freddo:</b> ${w.v.toFixed(0)}% nelle ${W} partite fino al ${dl(G[w.i].d)}</li></ul>`:'';
   return H+`<svg class="tch" viewBox="0 0 600 250" role="img" aria-label="Andamento della percentuale dal campo"><g class="gl">${gr}</g><line class="av" x1="48" x2="588" y1="${Y(avg)}" y2="${Y(avg)}"/><polyline class="tl" points="${pts.join(' ')}"/>${dots.join('')}<text x="588" y="${Y(avg)-7}" text-anchor="end">media ${avg.toFixed(0)}%</text><text x="48" y="240">${dl(G[0].d)}</text><text x="318" y="240" text-anchor="middle">${G.length} partite</text><text x="588" y="240" text-anchor="end">${dl(G[G.length-1].d)}</text></svg><div class="cmt">${note}</div>`}
+const PLAY='<svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>',PAUSE='<svg viewBox="0 0 16 16" width="14" height="14"><path d="M3 2h4v12H3zM9 2h4v12H9z" fill="currentColor"/></svg>';
+let DATES=[],rpT=null,VIS=[];
+const rps=$('#rps'),rpp=$('#rpp');rpp.innerHTML=PLAY;
+function rpLabel(){$('#rpl').textContent=S.rp==null?'Stagione completa · '+DATES.length+' partite':'Fino al '+dl(S.rp)+' · partita '+(+rps.value+1)+' di '+DATES.length}
+function stopRp(){clearInterval(rpT);rpT=null;rpp.innerHTML=PLAY;$('#court').classList.toggle('rp',S.rp!=null)}
+function resetRp(){stopRp();S.rp=null;DATES=[...new Set(sh.shots.map(x=>x[6]))].sort((x,y)=>x-y);rps.max=Math.max(0,DATES.length-1);rps.value=rps.max;rpLabel()}
+function rpSet(i){rps.value=i;S.rp=i>=DATES.length-1?null:DATES[i];rpLabel();$('#court').classList.toggle('rp',S.rp!=null||!!rpT);draw()}
+rps.oninput=()=>{stopRp();rpSet(+rps.value)};
+rpp.onclick=()=>{
+  if(rpT){stopRp();return}
+  if(!sh||DATES.length<2)return;
+  let i=S.rp==null?0:+rps.value;rpp.innerHTML=PAUSE;rpSet(i);
+  rpT=setInterval(()=>{i++;if(i>=DATES.length-1){rpSet(DATES.length-1);stopRp();return}rpSet(i)},220)};
+const famOf=t=>(FAM.find(f=>f[1].test(t.toLowerCase()))||['Altro'])[0];
+function clearTip(){$('#hl').innerHTML='';$('#tip').hidden=true}
+function nearest(e){
+  if(S.view!='pts'||S.cmp||!VIS.length)return null;
+  const r=$('#court').getBoundingClientRect(),k=500/r.width,x=(e.clientX-r.left)*k-250,y=417.5-(e.clientY-r.top)*k;
+  let b=null,bd=(24*k)**2;for(const s of VIS){const d=(s[0]-x)**2+(s[1]-y)**2;if(d<bd){bd=d;b=s}}return b}
+function showTip(s){
+  $('#hl').innerHTML=`<circle class="ring" cx="${s[0]}" cy="${-s[1]}" r="9"/>`;
+  const t=$('#tip'),q=s[4]>4?(s[4]==5?'OT':(s[4]-4)+'° OT'):s[4]+'° quarto';
+  t.innerHTML=`<button aria-label="Chiudi">×</button><b>${dl(s[6])} · vs ${sh.lookups.opp[s[7]]}</b>${q}${s[10]?' · Playoff':''}<br>${famOf(sh.lookups.action[s[8]])} da ${s[5]} punti<br>${s[3]} ft (${(s[3]*.3048).toFixed(1)} m) · <span class="${s[2]?'ok':'ko'}">${s[2]?'Segnato':'Sbagliato'}</span>`;
+  t.hidden=false}
+$('#court').addEventListener('pointerdown',e=>{const s=nearest(e);s?showTip(s):clearTip()});
+$('#court').addEventListener('pointermove',e=>{if(e.pointerType!='mouse')return;const s=nearest(e);if(s)showTip(s)});
+$('#tip').addEventListener('click',e=>{if(e.target.closest('button'))clearTip()});
 const syncRs=()=>{$('[data-k=rs]').hidden=S.view!='pts'||!!S.cmp};syncRs();
 document.querySelectorAll('.grp[data-k]').forEach(g=>g.onclick=e=>{
   const b=e.target.closest('button');if(!b)return;

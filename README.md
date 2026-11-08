@@ -18,6 +18,8 @@ Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, s
 - **Filtro per avversario** e **commenti automatici** sotto la mappa (zona più forte, zona più debole, quota di tiri da 3).
 - **Come tira**: barre per tipo di tiro (schiacciate, entrate e appoggi, jump shot, step-back, floater…) con quota sul totale e percentuale di realizzazione.
 - **Andamento nella stagione**: percentuale dal campo sulle ultime 10 partite, con la media della stagione, il periodo migliore e quello più freddo.
+- **Replay della stagione**: un cursore (o il tasto play) fa avanzare la stagione partita dopo partita; mappa, statistiche e grafici crescono con i tiri.
+- **Dettaglio del tiro**: nella vista Punti, toccando o passando vicino a un tiro compare un cartellino con data, avversario, quarto, tipo di tiro, distanza ed esito.
 - **Condividi**: link che riapre la stessa vista (giocatore, stagione, filtri) e immagine della mappa da scaricare o condividere.
 - **Tema chiaro e scuro**.
 - **Responsive**: pensata per desktop e mobile.
