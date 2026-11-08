@@ -98,6 +98,9 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
 .rpb #rpr{background:var(--grpbg);color:var(--txt)}.rpb input{flex:1;min-width:0;accent-color:var(--acc)}.rpl{margin-top:6px;font-size:13px;color:var(--mut)}
 #court.rp .hex{animation:none}
 .sec{margin-top:24px}
+#cmt2{grid-column:1/-1}#cmt2 ul{margin:0;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(min-width:861px){.cc .cmt{display:none}}
+@media(max-width:860px){#cmt2{display:none}}
 #more{grid-area:x;display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
 .hw{display:grid;grid-template-columns:minmax(0,130px) 1fr 40px 62px;gap:10px;align-items:center;margin-bottom:12px;font-size:14px}
 .hw span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hb{height:10px;background:var(--tile);border-radius:6px;overflow:hidden}.hb i{display:block;height:100%;background:var(--act);border-radius:6px}
@@ -153,7 +156,7 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
     <div class="cmt" id="cmt"></div>
   </section>
   <section class="card dd" id="dist"></section>
-  <div id="more"><section class="card" id="how"></section><section class="card" id="trd"></section></div>
+  <div id="more"><section class="card cmt" id="cmt2"></section><section class="card" id="how"></section><section class="card" id="trd"></section></div>
   <section class="card" id="cmpv" hidden>
     <div id="cards"></div>
     <div class="row"><div class="grp seg" data-k="cv"><button data-v="side" class="on">Affiancati</button><button data-v="diff">Differenza</button></div></div>
@@ -206,7 +209,7 @@ async function load(){
   resetRp();draw();
 }
 const F=(d=sh)=>d.shots.filter(x=>(S.st=='a'||x[10]==S.st)&&(!S.opp||d.lookups.opp[x[7]]==S.opp)&&(S.rp==null||x[6]<=S.rp)&&(S.ty=='a'||x[5]==S.ty)&&(S.q=='a'||(S.q==5?x[4]>=5:x[4]==S.q)));
-function draw(){if(S.cmp)return drawCmp();fillOpp();pushHash();const a=F(),lg=lgs(season);stats(a);clearTip();court(a,lg);dist(a);$('#cmt').innerHTML=commento(a,lg);$('#how').innerHTML=how(a);$('#trd').innerHTML=trend(a)}
+function draw(){if(S.cmp)return drawCmp();fillOpp();pushHash();const a=F(),lg=lgs(season);stats(a);clearTip();court(a,lg);dist(a);const cm=commento(a,lg);$('#cmt').innerHTML=cm;$('#cmt2').innerHTML=cm?'<h2>In sintesi</h2>'+cm:'';$('#how').innerHTML=how(a);$('#trd').innerHTML=trend(a)}
 function calc(a){
   const n=a.length,mk=a.reduce((t,x)=>t+x[2],0),t3=a.filter(x=>x[5]==3),m3=t3.reduce((t,x)=>t+x[2],0);
   return[['Tiri',n,''],['FG%',n?100*mk/n:0,'%'],['3P%',t3.length?100*m3/t3.length:0,'%'],['eFG%',n?100*(mk+.5*m3)/n:0,'%'],['Distanza media',n?a.reduce((t,x)=>t+x[3],0)/n:0,' ft'],['Quota da 3',n?100*t3.length/n:0,'%']]}
