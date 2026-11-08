@@ -15,6 +15,9 @@ Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, s
 - **Filtri**: stagione, regular season o playoff, tiri da 2 o da 3 punti, quarto.
 - **Istogramma** dei tiri per distanza, con la percentuale di realizzazione per fascia.
 - **Modalità Confronto**: due giocatori (o lo stesso giocatore in due stagioni) con heatmap affiancate, una mappa delle differenze, tabella testa a testa e confronto delle distanze di tiro.
+- **Filtro per avversario** e **commenti automatici** sotto la mappa (zona più forte, zona più debole, quota di tiri da 3).
+- **Condividi**: link che riapre la stessa vista (giocatore, stagione, filtri) e immagine della mappa da scaricare o condividere.
+- **Tema chiaro e scuro**.
 - **Responsive**: pensata per desktop e mobile.
 
 ## Come leggere i grafici
