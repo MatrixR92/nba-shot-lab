@@ -48,7 +48,8 @@ h1{font:800 clamp(38px,6vw,58px)/.92 var(--fh);margin:8px 0 12px}
 .ph{flex:0 0 44%;align-self:flex-end;padding:16px 10px 0;border-radius:14px;background:radial-gradient(ellipse at 50% 100%,color-mix(in srgb,var(--acc) 40%,transparent),transparent 72%)}.ph img{display:block;width:100%;aspect-ratio:1040/760;object-fit:cover;object-position:top;border-radius:10px 10px 0 0}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
 .stats div{background:var(--tile);border-radius:12px;padding:12px 14px}
-.stats b{display:block;font:700 clamp(26px,6vw,38px)/1.05 var(--fh);color:var(--act)}.stats span{font-size:12px;color:var(--mut)}
+.stats b{display:block;font:700 clamp(26px,6vw,38px)/1.05 var(--fh);color:var(--act)}.stats b small{font-size:.5em;font-weight:600;color:var(--mut);margin-left:3px}
+.stats span{font-size:12px;color:var(--mut)}
 .cc{grid-area:c;align-self:stretch}.dd{grid-area:d;align-self:stretch;display:flex;flex-direction:column}.dd .hist{flex:1}
 .row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:10px}
 .grp{display:flex;gap:4px;background:var(--grpbg);border-radius:10px;padding:3px}
@@ -178,8 +179,8 @@ function calc(a){
   const n=a.length,mk=a.reduce((t,x)=>t+x[2],0),t3=a.filter(x=>x[5]==3),m3=t3.reduce((t,x)=>t+x[2],0);
   return[['Tiri',n,''],['FG%',n?100*mk/n:0,'%'],['3P%',t3.length?100*m3/t3.length:0,'%'],['eFG%',n?100*(mk+.5*m3)/n:0,'%'],['Distanza media',n?a.reduce((t,x)=>t+x[3],0)/n:0,' ft'],['Quota da 3',n?100*t3.length/n:0,'%']]}
 function stats(a){
-  const e=!a.length;
-  $('#stats').innerHTML=calc(a).slice(0,6).map(([k,v,u])=>`<div><b>${k=='Tiri'?v:e?'–':v.toFixed(1)+(u==' ft'?u:'')}</b><span>${k}</span></div>`).join('');
+  const e=!a.length,mk=a.reduce((t,x)=>t+x[2],0);
+  $('#stats').innerHTML=calc(a).slice(0,6).map(([k,v,u])=>k=='Tiri'?`<div><b>${mk}<small>/${v}</small></b><span>Segnati / tentati</span></div>`:`<div><b>${e?'–':v.toFixed(1)+(u==' ft'?u:'')}</b><span>${k}</span></div>`).join('');
 }
 function hexRound(q,r){let x=q,z=r,y=-x-z,rx=Math.round(x),ry=Math.round(y),rz=Math.round(z);const dx=Math.abs(rx-x),dy=Math.abs(ry-y),dz=Math.abs(rz-z);if(dx>dy&&dx>dz)rx=-ry-rz;else if(dy>dz)ry=-rx-rz;else rz=-rx-ry;return[rx,rz]}
 function lgAt(lg,cx,cy,d){let n=0,m=0;const c=L.cell,f=(v,o)=>Math.floor((v-o)/c);

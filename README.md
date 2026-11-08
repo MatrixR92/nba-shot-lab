@@ -2,12 +2,12 @@
 
 Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, stagione per stagione. Web app responsive, scritta in HTML, CSS e JavaScript puro, pensata per essere pubblicata su GitHub Pages.
 
-**Demo:** https://matrixr92.github.io/nba-shot-lab/
+**Demo:** https://TUO-USERNAME.github.io/nba-shot-lab/
 
 ## Cosa fa
 
 - **Ricerca giocatore** con suggerimenti e foto, su 10 stagioni (dal 2016-17 al 2025-26).
-- **Card del giocatore** con foto, logo della squadra e numeri chiave: tiri tentati, FG%, 3P%, eFG%, distanza media.
+- **Card del giocatore** con foto, logo della squadra e numeri chiave: tiri segnati/tentati, FG%, 3P%, eFG%, distanza media e quota di tiri da 3.
 - **Tre viste del campo:**
   - **Punti**: ogni tiro sul mezzo campo, segnati pieni e sbagliati a croce, con filtro segnati/sbagliati.
   - **Heatmap**: esagoni dove la dimensione indica la frequenza dei tiri e il colore la percentuale rispetto alla media NBA nella stessa zona (blu sotto la media, rosso sopra).
