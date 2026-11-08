@@ -37,10 +37,10 @@ header{display:flex;gap:16px;align-items:center;justify-content:space-between;ma
 #res button:hover{background:var(--hov)}
 #res img{width:44px;height:32px;object-fit:cover;object-position:top;border-radius:6px;background:var(--line)}
 #res span{flex:1;font-weight:500}#res i{font-style:normal;font-size:12px;color:var(--mut)}
-main{display:grid;gap:16px;max-width:1180px;margin:0 auto;padding:0 16px 24px;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);grid-template-areas:"h c" "d c" "x x";grid-template-rows:auto 1fr auto;align-items:start}
+main{display:grid;gap:16px;max-width:1180px;margin:0 auto;padding:0 16px 24px;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);grid-template-areas:"h c" "d c" "x x";grid-template-rows:1fr auto auto;align-items:start}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
-#hero{grid-area:h;background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 30%,var(--card)),var(--card) 65%);overflow:hidden}
-.top{display:flex;gap:8px;align-items:flex-end;justify-content:space-between}
+#hero{grid-area:h;align-self:stretch;display:flex;flex-direction:column;background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 30%,var(--card)),var(--card) 65%);overflow:hidden}
+.top{flex:1;display:flex;gap:8px;align-items:flex-end;justify-content:space-between}
 .info{flex:1;min-width:0;padding-bottom:6px}
 .tm{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:15px}.tm img{width:50px;height:50px;object-fit:contain}
 h1{font:800 clamp(38px,6vw,58px)/.92 var(--fh);margin:8px 0 12px}
@@ -50,7 +50,7 @@ h1{font:800 clamp(38px,6vw,58px)/.92 var(--fh);margin:8px 0 12px}
 .stats div{background:var(--tile);border-radius:12px;padding:12px 14px}
 .stats b{display:block;font:700 clamp(26px,6vw,38px)/1.05 var(--fh);color:var(--act)}.stats b small{font-size:.5em;font-weight:600;color:var(--mut);margin-left:3px}
 .stats span{font-size:12px;color:var(--mut)}
-.cc{grid-area:c;align-self:stretch}.dd{grid-area:d;align-self:stretch;display:flex;flex-direction:column}.dd .hist{flex:1}
+.cc{grid-area:c;align-self:stretch}.dd{grid-area:d}
 .row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:10px}
 .grp{display:flex;gap:4px;background:var(--grpbg);border-radius:10px;padding:3px}
 .grp[hidden]{display:none}
@@ -65,7 +65,7 @@ h1{font:800 clamp(38px,6vw,58px)/.92 var(--fh);margin:8px 0 12px}
 #legend,.lgd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:10px;font-size:13px;color:var(--mut)}
 #legend .bar,.lgd .bar{flex:0 0 90px;height:8px;border-radius:4px;background:linear-gradient(90deg,#3b82f6,#94a3b8,#ff6a3d)}
 h2{font:700 22px/1 var(--fh);margin-bottom:14px}h2 small{font:400 13px var(--fb);color:var(--mut);margin-left:6px}
-.hist{display:flex;gap:6px;min-height:180px}.hist>div{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}
+.hist{display:flex;gap:6px;height:180px}.hist>div{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}
 .hist em{font-style:normal;font-size:11px;color:var(--mut);height:16px;white-space:nowrap}.hist u{flex:1;width:100%;display:flex;align-items:flex-end}
 .hist i{display:block;width:100%;min-height:2px;background:var(--act);border-radius:4px 4px 0 0;opacity:.9}.hist span{font-size:11px;color:var(--mut);margin-top:4px;white-space:nowrap}.hist small{font-size:inherit}
 .msg{padding:24px;color:var(--mut)}footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;font-size:12px;color:var(--mut)}
@@ -94,7 +94,7 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
 .ring{fill:none;stroke:var(--txt);stroke-width:2}
 .rpb{display:flex;align-items:center;gap:12px;margin-top:14px}
 .rpb button{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:var(--acc);color:#0a0e15;cursor:pointer;display:grid;place-items:center}
-.rpb input{flex:1;min-width:0;accent-color:var(--acc)}.rpl{margin-top:6px;font-size:13px;color:var(--mut)}
+.rpb #rpr{background:var(--grpbg);color:var(--txt)}.rpb input{flex:1;min-width:0;accent-color:var(--acc)}.rpl{margin-top:6px;font-size:13px;color:var(--mut)}
 #court.rp .hex{animation:none}
 .sec{margin-top:24px}
 #more{grid-area:x;display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
@@ -147,7 +147,7 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
       <g id="layer"></g><g id="hl"></g>
     </svg></div>
     <div id="legend"></div>
-    <div class="rpb"><button id="rpp" aria-label="Riproduci la stagione" title="Riproduci la stagione"></button><input type="range" id="rps" min="0" max="0" value="0" aria-label="Avanzamento della stagione"></div>
+    <div class="rpb"><button id="rpp" aria-label="Riproduci la stagione" title="Riproduci la stagione"></button><button id="rpr" aria-label="Torna alla stagione completa" title="Torna alla stagione completa"><svg viewBox="0 0 16 16" width="12" height="12"><rect x="2" y="2" width="12" height="12" rx="2" fill="currentColor"/></svg></button><input type="range" id="rps" min="0" max="0" value="0" aria-label="Avanzamento della stagione"></div>
     <div class="rpl" id="rpl"></div>
     <div class="cmt" id="cmt"></div>
   </section>
@@ -395,8 +395,9 @@ let DATES=[],rpT=null,VIS=[];
 const rps=$('#rps'),rpp=$('#rpp');rpp.innerHTML=PLAY;
 function rpLabel(){$('#rpl').textContent=S.rp==null?'Stagione completa · '+DATES.length+' partite':'Fino al '+dl(S.rp)+' · partita '+(+rps.value+1)+' di '+DATES.length}
 function stopRp(){clearInterval(rpT);rpT=null;rpp.innerHTML=PLAY;$('#court').classList.toggle('rp',S.rp!=null)}
-function resetRp(){stopRp();S.rp=null;DATES=[...new Set(sh.shots.map(x=>x[6]))].sort((x,y)=>x-y);rps.max=Math.max(0,DATES.length-1);rps.value=rps.max;rpLabel()}
+function resetRp(){stopRp();S.rp=null;$('#court').classList.remove('rp');DATES=[...new Set(sh.shots.map(x=>x[6]))].sort((x,y)=>x-y);rps.max=Math.max(0,DATES.length-1);rps.value=rps.max;rpLabel()}
 function rpSet(i){rps.value=i;S.rp=i>=DATES.length-1?null:DATES[i];rpLabel();$('#court').classList.toggle('rp',S.rp!=null||!!rpT);draw()}
+$('#rpr').onclick=()=>{if(sh){resetRp();draw()}};
 rps.oninput=()=>{stopRp();rpSet(+rps.value)};
 rpp.onclick=()=>{
   if(rpT){stopRp();return}
