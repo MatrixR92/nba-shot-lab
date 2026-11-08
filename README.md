@@ -2,7 +2,7 @@
 
 Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, stagione per stagione. Web app responsive, scritta in HTML, CSS e JavaScript puro, pensata per essere pubblicata su GitHub Pages.
 
-**Demo:** https://matrixr92.github.io/nba-shot-lab/
+**Demo:** https://TUO-USERNAME.github.io/nba-shot-lab/
 
 ## Cosa fa
 
@@ -16,6 +16,8 @@ Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, s
 - **Istogramma** dei tiri per distanza, con la percentuale di realizzazione per fascia.
 - **Modalità Confronto**: due giocatori (o lo stesso giocatore in due stagioni) con heatmap affiancate, una mappa delle differenze, tabella testa a testa e confronto delle distanze di tiro.
 - **Filtro per avversario** e **commenti automatici** sotto la mappa (zona più forte, zona più debole, quota di tiri da 3).
+- **Come tira**: barre per tipo di tiro (schiacciate, entrate e appoggi, jump shot, step-back, floater…) con quota sul totale e percentuale di realizzazione.
+- **Andamento nella stagione**: percentuale dal campo sulle ultime 10 partite, con la media della stagione, il periodo migliore e quello più freddo.
 - **Condividi**: link che riapre la stessa vista (giocatore, stagione, filtri) e immagine della mappa da scaricare o condividere.
 - **Tema chiaro e scuro**.
 - **Responsive**: pensata per desktop e mobile.
