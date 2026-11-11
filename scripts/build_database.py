@@ -18,6 +18,8 @@ Cosa produce (nella cartella data/ del progetto):
     players/<id>.json   tutti i tiri di un giocatore, stagione per stagione
     players.json        elenco giocatori (per la ricerca) con le stagioni giocate
     teams.json          elenco squadre
+    teams/<id>.json     attacco, difesa, playoff, record e leader di ogni squadra
+    team_summary.json   totali di ogni squadra (per piazzamenti e grafici)
     league.json         medie di lega per zona e per cella del campo
     meta.json           informazioni generali
 La cartella cache/ contiene i dati grezzi scaricati: serve solo a te e non va
@@ -49,6 +51,9 @@ COLONNE_API = ["GAME_ID", "GAME_EVENT_ID", "PLAYER_ID", "PLAYER_NAME", "TEAM_ID"
                "SHOT_ZONE_BASIC", "SHOT_ZONE_AREA", "SHOT_DISTANCE", "LOC_X", "LOC_Y",
                "SHOT_MADE_FLAG", "GAME_DATE", "HTM", "VTM"]
 
+FAMIGLIE = ["Restricted Area", "In The Paint (Non-RA)", "Mid-Range", "Corner 3", "Above the Break 3"]
+MIN_TIRI_LEADER = 10         # nella lista dei leader di squadra entra chi ha tirato almeno così
+
 ROOT = Path(__file__).resolve().parent.parent   # cartella principale del progetto
 DATA = ROOT / "data"
 CACHE = ROOT / "cache"
@@ -71,13 +76,13 @@ def scrivi_json(percorso, dati):
 
 
 def stagione_completa(season):
-    """Pronta solo se esistono .npz e .json e il .json è della versione con i dati squadra."""
+    """Pronta solo se esistono .npz e .json e il .json è della versione con playoff e leader di squadra."""
     base = CACHE / "stagioni"
     js = base / f"{season}.json"
     if not ((base / f"{season}.npz").exists() and js.exists()):
         return False
     try:
-        return json.loads(js.read_text(encoding="utf-8")).get("v") == 2
+        return json.loads(js.read_text(encoding="utf-8")).get("v") == 3
     except Exception:
         return False
 
@@ -181,6 +186,65 @@ def aggrega_squadre(reg, sigla):
     return out
 
 
+def famiglia(zona):
+    """'Left Corner 3|Left Side(L)' -> 'Corner 3'; i tiri da metà campo non contano."""
+    base = str(zona).split("|")[0]
+    if "Corner" in base:
+        return "Corner 3"
+    return base if base in FAMIGLIE else None
+
+
+def famiglie(zone):
+    """Somma le zone fini nelle 5 famiglie: {famiglia: [tentati, segnati]}."""
+    out = {}
+    for k, (n, m, *_) in zone.items():
+        f = famiglia(k)
+        if f:
+            a = out.setdefault(f, [0, 0])
+            a[0] += n
+            a[1] += m
+    return out
+
+
+def leader_squadre(df):
+    """Per ogni squadra i giocatori che hanno tirato con quella maglia (anche se poi scambiati):
+    [id, tentati, segnati, da 3 tentati, da 3 segnati, poi (tentati, segnati) per ognuna
+    delle 5 famiglie di zone]."""
+    out = {}
+    if not len(df):
+        return out
+    d = df.copy()
+    d["FAM"] = d["ZONE"].map(famiglia)
+    for (tid, pid), g in d.groupby(["TEAM_ID", "PLAYER_ID"]):
+        if len(g) < MIN_TIRI_LEADER:
+            continue
+        t3 = g["TYPE"] == 3
+        riga = [int(pid), int(len(g)), int(g["SHOT_MADE_FLAG"].sum()), int(t3.sum()),
+                int(g["SHOT_MADE_FLAG"][t3].sum())]
+        for f in FAMIGLIE:
+            x = g[g["FAM"] == f]
+            riga += [int(len(x)), int(x["SHOT_MADE_FLAG"].sum())]
+        out.setdefault(str(int(tid)), []).append(riga)
+    for righe in out.values():
+        righe.sort(key=lambda r: -r[1])
+    return out
+
+
+def squadre_stagione(df, sigla):
+    """Dati di squadra della stagione: regular season + playoff (chiave 'p')."""
+    reg = df[df["PO"] == 0]
+    po = df[df["PO"] == 1]
+    out = aggrega_squadre(reg, sigla)
+    for tid, righe in leader_squadre(reg).items():
+        out.setdefault(tid, {"g": 0})["l"] = righe
+    if len(po):
+        lp = leader_squadre(po)
+        for tid, e in aggrega_squadre(po, sigla).items():
+            e["l"] = lp.get(tid, [])
+            out.setdefault(tid, {"g": 0})["p"] = e
+    return out
+
+
 # --- Passo 1: una stagione alla volta -----------------------------------------------
 def salva_stagione(season, pezzi, C):
     df = pd.concat(pezzi, ignore_index=True)
@@ -234,12 +298,40 @@ def salva_stagione(season, pezzi, C):
     griglia = {f"{a},{b}": [int(len(x)), int(x["m"].sum())] for (a, b), x in celle.groupby(["cx", "cy"])}
 
     scrivi_json(cartella / f"{season}.json",
-                {"v": 2, "stats": stats, "nomi": nomi, "lega": {"zones": zone, "grid": griglia},
-                 "squadre": aggrega_squadre(reg, sigla)})
+                {"v": 3, "stats": stats, "nomi": nomi, "lega": {"zones": zone, "grid": griglia},
+                 "squadre": squadre_stagione(df, sigla)})
     np.savez_compressed(cartella / f"{season}.npz",
                         **{k: np.asarray(v).astype(np.int32) for k, v in arr.items()})
 
     return len(df), len(stats)
+
+
+# --- Vittorie e sconfitte (una richiesta per tipo di stagione) -----------------------
+def record_stagione(season, oggi):
+    """Scarica il bilancio vittorie/sconfitte di ogni squadra (regular season e playoff).
+    Se qualcosa va storto non ferma lo script: il sito mostra solo meno informazioni.
+    Restituisce False se la richiesta è fallita."""
+    f = CACHE / "record" / f"{season}.json"
+    corrente = season == nome_stagione(anno_corrente(oggi))
+    if f.exists() and not corrente:
+        return True
+    try:
+        from nba_api.stats.endpoints import leaguegamelog
+        out = {}
+        for chiave, tipo in (("rs", "Regular Season"), ("po", "Playoffs")):
+            df = leaguegamelog.LeagueGameLog(
+                season=season, season_type_all_star=tipo,
+                player_or_team_abbreviation="T", timeout=90).get_data_frames()[0]
+            time.sleep(PAUSA)
+            out[chiave] = {str(int(t)): [int((g["WL"] == "W").sum()), int((g["WL"] == "L").sum())]
+                           for t, g in df.groupby("TEAM_ID")} if len(df) else {}
+        if not out["rs"]:
+            raise ValueError("nessuna partita di regular season")
+        scrivi_json(f, out)
+        return True
+    except Exception as e:
+        print(f"  {season}: vittorie/sconfitte non scaricate ({type(e).__name__}: {str(e)[:100]})")
+        return False
 
 
 # --- Passo 2: unisce tutte le stagioni in un file per giocatore --------------------
@@ -257,10 +349,26 @@ def assembla(seasons, C):
         for k, v in j["stats"].items():
             stats.setdefault(int(k), {})[s] = {"fga": v[0], "fgm": v[1], "tid": v[2]}
         lega[s] = j["lega"]
+        fr = CACHE / "record" / f"{s}.json"
+        rec = json.loads(fr.read_text(encoding="utf-8")) if fr.exists() else {"rs": {}, "po": {}}
         for tid, e in j.get("squadre", {}).items():
-            sq.setdefault(tid, {})[s] = {"g": e["g"], "o": e.get("o"), "d": e.get("d")}
-            riepilogo.setdefault(s, {})[tid] = {"g": e["g"], "o": (e.get("o") or {}).get("t"),
-                                                "d": (e.get("d") or {}).get("t")}
+            voce = {"g": e["g"], "o": e.get("o"), "d": e.get("d"), "l": e.get("l", [])}
+            if rec["rs"].get(tid):
+                voce["r"] = rec["rs"][tid]
+            riep = {"g": e["g"], "o": (e.get("o") or {}).get("t"), "d": (e.get("d") or {}).get("t"),
+                    "z": {lato: famiglie(e[lato]["zones"]) for lato in ("o", "d") if e.get(lato)}}
+            if voce.get("r"):
+                riep["r"] = voce["r"]
+            if e.get("p"):
+                p = e["p"]
+                voce["p"] = {"g": p["g"], "o": p.get("o"), "d": p.get("d"), "l": p.get("l", [])}
+                rp = {"g": p["g"], "o": (p.get("o") or {}).get("t"), "d": (p.get("d") or {}).get("t"),
+                      "z": {lato: famiglie(p[lato]["zones"]) for lato in ("o", "d") if p.get(lato)}}
+                if rec["po"].get(tid):
+                    voce["p"]["r"] = rp["r"] = rec["po"][tid]
+                riep["p"] = rp
+            sq.setdefault(tid, {})[s] = voce
+            riepilogo.setdefault(s, {})[tid] = riep
     A = {c: np.concatenate(v) for c, v in parti.items()}
     A["se"] = np.concatenate(se)
     del parti
@@ -355,6 +463,13 @@ def main():
     seasons = sorted(p.stem for p in (CACHE / "stagioni").glob("*.npz"))
     if not seasons:
         sys.exit("Nessuna stagione disponibile.")
+    print("\nVittorie e sconfitte...")
+    falliti = 0
+    for s in seasons:
+        falliti = 0 if record_stagione(s, oggi) else falliti + 1
+        if falliti >= 2:
+            print("  salto il resto: riprova al prossimo lancio (il resto del sito funziona lo stesso)")
+            break
     print(f"\nAssemblo i file dei giocatori ({len(seasons)} stagioni)...")
     n = assembla(seasons, C)
     peso = sum(f.stat().st_size for f in DATA.rglob("*.json")) / 1024 / 1024

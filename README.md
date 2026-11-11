@@ -26,7 +26,13 @@ Il sito ha tre modalità: **Giocatore**, **Confronto** e **Squadra**. Si parte d
 Due giocatori (o lo stesso giocatore in due stagioni) con heatmap affiancate, mappa delle differenze, tabella testa a testa e confronto delle distanze di tiro.
 
 ### Squadra
-Ricerca squadra e stagione (solo regular season). Mappa di **attacco** (dove tira) e di **difesa** (dove concede i tiri agli avversari), in heatmap o zone. Le statistiche mostrano FG%, 3P% e eFG% con il piazzamento nella lega. Il roster elenca i giocatori con almeno 50 tiri in carriera; un clic porta alla vista Giocatore.
+Ricerca squadra, stagione e interruttore **Regular season / Playoff**.
+- **Record** vittorie-sconfitte con il piazzamento in lega (regular season).
+- Mappa di **attacco** (dove tira) e di **difesa** (dove concede i tiri agli avversari), in heatmap o zone.
+- **Statistiche** con piazzamento nella lega: FG%, 3P%, eFG%.
+- **Roster e leader**: chi ha tirato di più, il miglior tiratore da 3, il più preciso e chi tira di più da ogni zona. Conta i tiri fatti con quella maglia, anche per chi è stato scambiato. Un clic porta alla vista Giocatore.
+- **In sintesi**: commenti automatici e tabella per zona (quota di tiri, percentuale, media NBA, piazzamento).
+- **Negli anni**: quota di tiri da 3 ed eFG% in attacco e in difesa dal 1996-97, con la media NBA; un clic su un anno lo seleziona.
 
 ### In generale
 - **Condividi**: link che riapre la stessa vista (modalità, stagione, filtri) e immagine della mappa da scaricare o condividere.
@@ -64,7 +70,7 @@ nba-shot-lab/
     ├── teams.json            elenco squadre
     ├── league.json           medie di lega per zona e per cella del campo
     ├── team_summary.json     totali di attacco e difesa di ogni squadra (per i piazzamenti)
-    ├── teams/<id>.json       attacco e difesa di una squadra, stagione per stagione
+    ├── teams/<id>.json       attacco, difesa, playoff, record e leader di una squadra, stagione per stagione
     └── players/<id>.json     tutti i tiri di un giocatore, stagione per stagione
 ```
 
@@ -87,4 +93,4 @@ Servono Python 3 e alcune librerie: `pip install nba_api pandas numpy`.
 - **Prima volta** (tutte le stagioni, dal 1996-97): lancia `scripts/build_database.py`. Ci vuole del tempo, ma si può interrompere e rilanciare: riparte da dove era arrivato.
 - **Aggiornamenti**: rilancia lo script. Le stagioni concluse non vengono riscaricate, per quella in corso vengono riprese le ultime tre settimane. Per una sola stagione: `build_database.py 2026` (2026 = 2026-27).
 
-Poi basta fare commit e push della cartella `data/`. Le partite di play-in non sono incluse.
+Poi basta fare commit e push della cartella `data/`. Le partite di play-in non sono incluse. Il bilancio vittorie-sconfitte viene da una richiesta in più per stagione (`cache/record/`): se fallisce, lo script lo dice e il resto del sito funziona lo stesso.

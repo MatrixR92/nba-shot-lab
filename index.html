@@ -100,17 +100,27 @@ main.teamm{grid-template-columns:minmax(0,1fr);grid-template-areas:"t";grid-temp
 #court.rp .hex{animation:none}
 .sec{margin-top:24px}
 #hero .tm{cursor:pointer;width:fit-content}#hero .tm:hover span{color:var(--txt)}
-.tgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:start;grid-template-areas:"h c" "r c"}
-#thero{grid-area:h;background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 30%,var(--card)),var(--card) 65%)}#tmap{grid-area:c}#troster{grid-area:r}
+.tgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:start;grid-template-areas:"h c" "r c" "s e"}
+#thero{grid-area:h;background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 30%,var(--card)),var(--card) 65%)}#tmap{grid-area:c}#troster{grid-area:r}#tsint{grid-area:s}#tevo{grid-area:e}
 .tlogo{flex:0 0 34%;align-self:center;padding:4px}.tlogo img{display:block;width:100%;max-height:190px;object-fit:contain}
 .tkick{color:var(--mut);font-size:14px}
+.trow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.rec{margin-top:12px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.rec b{font:700 32px/1 var(--fh);color:var(--act)}.rec span{font-size:13px;color:var(--mut)}
+.zt{margin-top:14px;font-size:14px}.zt>div{display:grid;grid-template-columns:minmax(0,1.6fr) .8fr .8fr .8fr .7fr;gap:6px;padding:8px 4px;border-bottom:1px solid var(--line);align-items:center}.zt>div:last-child{border:0}.zt .zh{color:var(--mut);font-size:12px;padding-top:0}.zt span:not(:first-child){text-align:right}.zt .mu{color:var(--mut)}.zt .hi{color:var(--act);font-weight:700}
+.lead h3,.rh{font:700 15px var(--fh);color:var(--mut);margin:16px 0 8px;text-transform:uppercase;letter-spacing:.05em}
+.lc{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:8px;margin-top:8px}
+.lch,.lzr{font:inherit;color:var(--txt);cursor:pointer;text-align:left}
+.lch{display:flex;flex-direction:column;gap:3px;background:var(--tile);border:0;border-radius:12px;padding:10px 12px;min-width:0}.lch:hover,.lzr:hover{background:var(--hov)}
+.lch small{font-size:12px;color:var(--mut)}.lch b{font-weight:600;font-size:15px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lch em{font-style:normal;font-size:13px;color:var(--act)}
+.lzr{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr) auto;gap:8px;width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:8px 4px;font-size:14px;align-items:center}.lzr:last-child{border-bottom:0}
+.lzr span:first-child{color:var(--mut)}.lzr span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lzr em{font-style:normal;color:var(--act);font-size:13px;white-space:nowrap}
 .stats b{white-space:nowrap}
 .stats .rk{display:block;font-size:12px;color:var(--act);margin-top:2px;font-weight:600}
 .rr{display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;gap:10px;align-items:center;width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:8px 4px;text-align:left;cursor:pointer;border-radius:0}
 .rr:last-child{border-bottom:0}.rr:hover{background:var(--hov)}
 .rr img{width:44px;height:32px;object-fit:cover;object-position:top;border-radius:6px;background:var(--line)}
 .rr span{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rr em{font-style:normal;font-size:13px;color:var(--mut)}.rr b{font:700 18px/1 var(--fh);color:var(--act);min-width:48px;text-align:right}
-@media(max-width:860px){.tgrid{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "c" "r"}}
+@media(max-width:860px){.tgrid{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "c" "r" "s" "e"}}
 #cmt2{grid-column:1/-1}#cmt2 ul{margin:0;grid-template-columns:repeat(3,1fr);gap:10px}
 @media(min-width:861px){.cc .cmt{display:none}}
 @media(max-width:860px){#cmt2{display:none}}
@@ -175,14 +185,14 @@ main.teamm{grid-template-columns:minmax(0,1fr);grid-template-areas:"t";grid-temp
     <div class="row"><div class="grp seg" data-k="cv"><button data-v="side" class="on">Affiancati</button><button data-v="diff">Differenza</button></div></div>
     <div id="cmpf"></div><div id="cout"></div><div id="ctab" class="sec"></div><div id="cdist" class="sec"></div>
   </section>
-  <section id="teamv" hidden><div class="tgrid"><section class="card" id="thero"></section><section class="card" id="tmap"></section><section class="card" id="troster"></section></div></section>
+  <section id="teamv" hidden><div class="tgrid"><section class="card" id="thero"></section><section class="card" id="tmap"></section><section class="card" id="troster"></section><section class="card" id="tsint"></section><section class="card" id="tevo"></section></div></section>
 </main>
 <footer>Dati dalle statistiche NBA, scaricati con la libreria nba_api. Progetto personale, non affiliato alla NBA.</footer>
 <script>
 const $=s=>document.querySelector(s),DATA='data/';
 const COL={37:'#E03A3E',38:'#2FB463',39:'#FDBB30',40:'#B4975A',41:'#CE1141',42:'#00A3E0',43:'#FEC524',44:'#FFC72C',45:'#CE1141',46:'#E8334A',47:'#FDB927',48:'#F9423A',49:'#2EBD59',50:'#78BE20',51:'#A1A1AA',52:'#F58426',53:'#0F96E6',54:'#FDBB30',55:'#2E8BE6',56:'#E56020',57:'#E03A3E',58:'#8E6DD0',59:'#C4CED4',60:'#29A3F2',61:'#CE1141',62:'#F9A01B',63:'#5D76A9',64:'#E31837',65:'#E8334A',66:'#00A3B8'};
 const FALL='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1e293b"/><circle cx="50" cy="38" r="18" fill="#475569"/><path d="M14 100c4-30 20-38 36-38s32 8 36 38z" fill="#475569"/></svg>');
-const S={view:'heat',st:'a',ty:'a',rs:'a',q:'a',cv:'side',cmp:0,mode:0,tgt:'b',opp:'',rp:null,td:'o',tv:'heat'},cache=new Map();
+const S={view:'heat',st:'a',ty:'a',rs:'a',q:'a',cv:'side',cmp:0,mode:0,tgt:'b',opp:'',rp:null,td:'o',tv:'heat',tp:'0',te:'t3'},cache=new Map();
 let P=[],T={},L={},M={},cur,season,sh,cur2,season2,sh2,tcur=null,tse=null;
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const J=u=>fetch(u).then(r=>{if(!r.ok)throw Error(u);return r.json()});
@@ -201,7 +211,7 @@ async function init(){
   const u=applyHash(),hp=u&&P.find(x=>x.id==u.get('p'));
   if(hp){syncUI();pick(hp,u.get('s'));
     if(u.get('m')=='1'){cur2=P.find(x=>x.id==u.get('c'));season2=u.get('s2');if(cur2&&cur2.s[season2])setMode(1);else cur2=null}
-    else if(u.get('m')=='2'&&T[u.get('t')]){tcur=+u.get('t');tse=u.get('ts');S.td=u.get('td')=='d'?'d':'o';S.tv=u.get('tv')=='zone'?'zone':'heat';setMode(2)}}
+    else if(u.get('m')=='2'&&T[u.get('t')]){tcur=+u.get('t');tse=u.get('ts');S.td=u.get('td')=='d'?'d':'o';S.tv=u.get('tv')=='zone'?'zone':'heat';S.tp=u.get('tp')=='1'?'1':'0';S.te=['t3','efo','efd'].includes(u.get('te'))?u.get('te'):'t3';setMode(2)}}
   else pick(P.filter(p=>p.s[last]).sort((a,b)=>b.s[last].fga-a.s[last].fga)[0]||P[0],last);
 }
 function pick(p,sea){
@@ -344,24 +354,94 @@ let TSUM=null;const tsum=()=>TSUM||(TSUM=J(DATA+'team_summary.json').catch(()=>{
 const logo=id=>`https://cdn.nba.com/logos/nba/${id}/global/L/logo.svg`;
 const expand=cells=>{const c=L.cell,o=[];for(const[cx,cy,n,m]of cells){const x=L.xmin+(cx+.5)*c,y=L.ymin+(cy+.5)*c;for(let i=0;i<n;i++)o.push([x,y,i<m?1:0])}return o};
 const MET={fg:t=>t[1]/t[0],fg3:t=>t[2]?t[3]/t[2]:0,efg:t=>(t[1]+.5*t[3])/t[0]};
-function rank(sum,sea,tid,side,f){
+const FAMS=['Restricted Area','In The Paint (Non-RA)','Mid-Range','Corner 3','Above the Break 3'];
+const ZN={'Restricted Area':'Sotto canestro','In The Paint (Non-RA)':'Area','Mid-Range':'Mid-range','Corner 3':'Angoli da 3','Above the Break 3':'Da 3 dall\'arco'};
+const pe=(e,po)=>po?(e&&e.p):e,f1=v=>(100*v).toFixed(1);
+let PMAP=null;const pid=id=>(PMAP||(PMAP=new Map(P.map(p=>[p.id,p])))).get(id);
+function rank(sum,sea,tid,side,f,po){
   const o=sum&&sum.seasons[sea];if(!o)return'';
-  const v=Object.entries(o).filter(([,e])=>e[side]&&e[side][0]>0).map(([id,e])=>[id,f(e[side])]),me=v.find(x=>x[0]==tid);
+  const v=Object.entries(o).map(([id,e])=>[id,pe(e,po)]).filter(([,e])=>e&&e[side]&&e[side][0]>0).map(([id,e])=>[id,f(e[side])]),me=v.find(x=>x[0]==tid);
   if(!me)return'';
   return(v.filter(x=>side=='o'?x[1]>me[1]:x[1]<me[1]).length+1)+'ª su '+v.length}
+function recRank(sum,sea,tid){
+  const o=sum&&sum.seasons[sea];if(!o)return'';
+  const v=Object.entries(o).filter(([,e])=>e.r&&e.r[0]+e.r[1]>0).map(([id,e])=>[id,e.r[0]/(e.r[0]+e.r[1])]),me=v.find(x=>x[0]==tid);
+  return me?(v.filter(x=>x[1]>me[1]).length+1)+'ª su '+v.length:''}
+function sintesi(sum,sea,tid,side,po){
+  const o=sum&&sum.seasons[sea];if(!o)return'';
+  const teams=Object.entries(o).map(([id,e])=>[id,pe(e,po)]).filter(([,e])=>e&&e.o&&e.d&&e.z&&e.o[0]>0&&e.d[0]>0);
+  const me=teams.find(x=>x[0]==tid);if(!me)return'';
+  const att=side=='o',e=me[1],tot=e[side],z=e.z[side]||{},N=tot[0];
+  const lt={};FAMS.forEach(f=>lt[f]=[0,0]);let all=0,s3=[0,0];
+  for(const[,t]of teams){const zo=t.z.o||{};for(const f of FAMS)if(zo[f]){lt[f][0]+=zo[f][0];lt[f][1]+=zo[f][1];all+=zo[f][0]}s3[0]+=t.o[2];s3[1]+=t.o[0]}
+  const rows=FAMS.map(f=>{
+    const a=z[f]||[0,0],l=lt[f],lp=l[0]?l[1]/l[0]:0,vals=[];
+    for(const[id,t]of teams){const q=t.z[side]&&t.z[side][f];if(q&&q[0]>=15)vals.push([id,q[1]/q[0]])}
+    const m=vals.find(x=>x[0]==tid),fg=a[0]?a[1]/a[0]:null;
+    return{f,n:a[0],sh:N?a[0]/N:0,fg,lp,d:fg==null?null:fg-lp,r:m?vals.filter(x=>att?x[1]>m[1]:x[1]<m[1]).length+1:0,nt:vals.length}});
+  const ok=rows.filter(r=>r.d!=null&&r.n>=Math.max(15,N*.04)),
+    hi=ok.length?ok.reduce((a,b)=>b.d>a.d?b:a):null,lo=ok.length?ok.reduce((a,b)=>b.d<a.d?b:a):null,
+    dd=r=>`${r.d>0?'+':''}${(100*r.d).toFixed(1)}`,
+    line=(lab,r)=>r?`<li>${lab} <b>${ZN[r.f].toLowerCase()}</b>: ${att?'':'gli avversari segnano '}${f1(r.fg)}% (${dd(r)} sulla media NBA${r.r?`, ${r.r}ª su ${r.nt}`:''}).</li>`:'';
+  const sh3=tot[2]/N,v3=teams.map(([id,t])=>[id,t[side][2]/t[side][0]]),m3=v3.find(x=>x[0]==tid)[1],
+    more=v3.filter(x=>x[1]>m3).length+1,less=v3.filter(x=>x[1]<m3).length+1;
+  const b3=att?`<li>Il <b>${f1(sh3)}%</b> dei suoi tiri è da 3 (media NBA ${f1(s3[0]/s3[1])}%): ${more}ª su ${v3.length} per quota di tiri da 3.</li>`
+    :`<li>Concede tiri da 3 nel <b>${f1(sh3)}%</b> dei casi (media NBA ${f1(s3[0]/s3[1])}%): è la ${less}ª su ${v3.length} che ne concede meno.</li>`;
+  const tb=rows.map(r=>`<div><span>${ZN[r.f]}</span><span>${(100*r.sh).toFixed(0)}%</span><span>${r.fg==null?'–':f1(r.fg)+'%'}</span><span class="mu">${f1(r.lp)}%</span><span class="${r.r&&r.r<=5?'hi':''}">${r.r?r.r+'ª':'–'}</span></div>`).join('');
+  return`<h2>In sintesi<small>${att?'attacco':'difesa'} · ${po?'playoff':'regular season'}</small></h2>
+  <div class="cmt"><ul>${b3}${line(att?'Punto forte:':'Difende meglio:',att?hi:lo)}${line(att?'Punto debole:':'Concede di più:',att?lo:hi)}</ul></div>
+  <div class="zt"><div class="zh"><span>Zona</span><span>Quota</span><span>FG%</span><span>NBA</span><span>Piazz.</span></div>${tb}</div>
+  <div class="rpl">${att?'':'FG% = quanto segnano gli avversari. '}Piazzamento sulla percentuale: 1ª = la migliore${att?'':' (in difesa, chi concede meno)'}. Zone con almeno 15 tiri.</div>`}
+function evo(sum,tid,met,sea){
+  const ss=Object.keys(sum.seasons).sort(),side=met=='efd'?'d':'o',pc=met=='t3',
+    fn=t=>pc?t[2]/t[0]:(t[1]+.5*t[3])/t[0],lab={t3:'Quota di tiri da 3',efo:'eFG% in attacco',efd:'eFG% concesso'}[met];
+  const pts=ss.map(s=>{const o=sum.seasons[s],tot=[0,0,0,0,0];let t=null;
+    for(const[id,e]of Object.entries(o))if(e.o)for(let i=0;i<5;i++)tot[i]+=e.o[i];
+    const x=o[tid]&&o[tid][side];if(x&&x[0]>0)t=fn(x);
+    return{s,t,l:tot[0]?fn(tot):null}});
+  const vals=pts.flatMap(p=>[p.t,p.l]).filter(v=>v!=null).map(v=>100*v);if(!vals.length)return'';
+  let lo=Math.floor(Math.min(...vals)/3)*3,hi=Math.ceil(Math.max(...vals)/3)*3;if(hi-lo<6)hi=lo+6;
+  const st=(hi-lo)/3,X=i=>52+i*(536/Math.max(1,ss.length-1)),Y=v=>206-(100*v-lo)/(hi-lo)*192,w=536/Math.max(1,ss.length-1);
+  let gr='',xs='',pt='',pl='',gap=true,gap2=true;
+  for(let k=0;k<=3;k++){const v=lo+k*st,y=206-k*64;gr+=`<line x1="52" x2="588" y1="${y}" y2="${y}"/><text x="44" y="${y+5}" text-anchor="end">${v}%</text>`}
+  pts.forEach((p,i)=>{
+    if(i%5==0)xs+=`<text x="${X(i).toFixed(1)}" y="236" text-anchor="middle">${p.s.slice(0,4)}</text>`;
+    if(p.t==null)gap=true;else{pt+=`${gap?'M':'L'}${X(i).toFixed(1)} ${Y(p.t).toFixed(1)} `;gap=false}
+    if(p.l==null)gap2=true;else{pl+=`${gap2?'M':'L'}${X(i).toFixed(1)} ${Y(p.l).toFixed(1)} `;gap2=false}});
+  const si=ss.indexOf(sea),sp=pts[si];
+  const hit=pts.map((p,i)=>`<rect data-s="${p.s}" x="${(X(i)-w/2).toFixed(1)}" y="8" width="${w.toFixed(1)}" height="200" fill="transparent" style="cursor:pointer"><title>${p.s}: ${p.t==null?'nessun dato':f1(p.t)+'%'} · media NBA ${p.l==null?'–':f1(p.l)+'%'}</title></rect>`).join('');
+  const sel=si>=0?`<line class="av" x1="${X(si).toFixed(1)}" x2="${X(si).toFixed(1)}" y1="8" y2="206"/>${sp.t!=null?`<circle cx="${X(si).toFixed(1)}" cy="${Y(sp.t).toFixed(1)}" r="6" fill="var(--act)" stroke="var(--card)" stroke-width="3"/>`:''}`:'';
+  const tg=['t3','efo','efd'].map(k=>`<button data-v="${k}" class="${k==met?'on':''}">${{t3:'Tiri da 3',efo:'eFG% att.',efd:'eFG% dif.'}[k]}</button>`).join('');
+  return`<h2>Negli anni<small>regular season</small></h2><div class="row"><div class="grp" data-tk="te">${tg}</div></div>
+  <svg class="tch" viewBox="0 0 600 250" role="img" aria-label="${lab} negli anni"><g class="gl">${gr}</g><g>${xs}</g><path class="av" fill="none" d="${pl}"/>${sel}<path class="tl" d="${pt}"/>${hit}</svg>
+  <div class="rpl">${lab}${sp&&sp.t!=null?` · <b>${sp.s}</b>: ${f1(sp.t)}%${sp.l!=null?` (media NBA ${f1(sp.l)}%)`:''}`:''}. Linea tratteggiata = media NBA. Tocca un anno per vederlo.</div>`}
+function leaders(rows,po){
+  const A=rows.map(r=>({r,p:pid(r[0])})).filter(x=>x.p);if(!A.length)return'';
+  const best=(arr,f)=>arr.reduce((a,b)=>f(b)>f(a)?b:a,arr[0]),mn3=po?8:25,mnf=po?30:120;
+  const A3=A.filter(x=>x.r[3]>=mn3),A2=A.filter(x=>x.r[1]>=mnf),c1=best(A,x=>x.r[1]),c3=A3.length&&best(A3,x=>x.r[4]/x.r[3]),c2=A2.length&&best(A2,x=>x.r[2]/x.r[1]);
+  const chip=(t,c,v)=>c?`<button class="lch" data-id="${c.p.id}"><small>${t}</small><b>${c.p.name}</b><em>${v}</em></button>`:'';
+  const zr=FAMS.map((f,i)=>{const arr=A.filter(x=>x.r[5+2*i]>0);if(!arr.length)return'';const b=best(arr,x=>x.r[5+2*i]),n=b.r[5+2*i],m=b.r[6+2*i];
+    return`<button class="lzr" data-id="${b.p.id}"><span>${ZN[f]}</span><span>${b.p.name}</span><em>${n} tiri · ${Math.round(100*m/n)}%</em></button>`}).join('');
+  return`<div class="lead"><div class="lc">${chip('Più tiri',c1,c1.r[1]+' tiri')}${chip('Miglior da 3',c3,f1(c3&&c3.r[4]/c3.r[3])+'% ('+(c3&&c3.r[3])+' tiri)')}${chip('Più preciso',c2,f1(c2&&c2.r[2]/c2.r[1])+'%')}</div>
+  <h3>Chi tira di più da ogni zona</h3><div class="lz">${zr}</div></div>`}
 async function renderTeam(){
-  const id=tcur,sea0=tse;
+  const id=tcur;
   const[tf,sum]=await Promise.all([teamFile(id).catch(()=>{tfiles.delete(id);return null}),tsum()]);
   if(id!=tcur||S.mode!=2)return;
-  const tm=T[id]||{name:'Squadra',abbr:''};
+  const tm=T[id]||{name:'Squadra',abbr:''},po=S.tp=='1';
   document.documentElement.style.setProperty('--acc',COL[id-1610612700]||'#fdb927');
-  if(!tf||!Object.keys(tf.seasons).length){$('#thero').innerHTML='<div class="msg">Non trovo i dati di questa squadra. Rilancia scripts/build_database.py per generare i file in data/teams/.</div>';$('#tmap').innerHTML='';$('#troster').innerHTML='';return}
-  const ks=Object.keys(tf.seasons).sort().reverse();
-  if(!tf.seasons[tse])tse=ks[0];
-  const e=tf.seasons[tse],side=S.td,d=e[side];
-  const tot=(d&&d.t)||[0,0,0,0,0],n=tot[0],g=e.g||0,att=side=='o';
+  const clear=()=>{$('#tmap').innerHTML=$('#troster').innerHTML=$('#tsint').innerHTML=$('#tevo').innerHTML=''};
+  if(!tf||!Object.keys(tf.seasons).length){$('#thero').innerHTML='<div class="msg">Non trovo i dati di questa squadra. Rilancia scripts/build_database.py per generare i file in data/teams/.</div>';clear();return}
+  const all=Object.keys(tf.seasons).sort().reverse(),
+    ks=po?all.filter(k=>{const p=tf.seasons[k].p;return p&&(p.o||p.d)}):all,
+    tog=`<div class="grp" data-tk="tp"><button data-v="0" class="${po?'':'on'}">Regular season</button><button data-v="1" class="${po?'on':''}">Playoff</button></div>`,
+    head=(sel,rec)=>`<div class="top"><div class="info"><div class="tkick">Squadra · ${po?'playoff':'regular season'}</div><h1>${tm.name}</h1><div class="trow">${sel}${tog}</div>${rec}</div><div class="tlogo"><img src="${logo(id)}" alt="${tm.name}" onerror="this.style.display='none'"></div></div>`;
+  if(!ks.length){$('#thero').innerHTML=head('','')+'<div class="msg">Nessuna stagione di playoff trovata per questa squadra.</div>';clear();pushHash();return}
+  if(!ks.includes(tse))tse=ks[0];
+  const E=tf.seasons[tse],X=pe(E,po),side=S.td,d=X[side],att=side=='o';
+  const tot=(d&&d.t)||[0,0,0,0,0],n=tot[0],g=X.g||0;
   const fmt=(v,u)=>n?v.toFixed(1)+u:'–';
-  const rk=(k)=>{const r=rank(sum,tse,id,side,MET[k]);return r?`<small class="rk">${r}</small>`:''};
+  const rk=(k)=>{const r=rank(sum,tse,id,side,MET[k],po);return r?`<small class="rk">${r}</small>`:''};
   const tiles=[
     [att?'Tiri a partita':'Tiri concessi a partita',n&&g?fmt(tot[0]/g,''):'–',''],
     [att?'FG%':'FG% concesso',fmt(100*tot[1]/n,'%'),rk('fg')],
@@ -369,23 +449,35 @@ async function renderTeam(){
     [att?'eFG%':'eFG% concesso',fmt(100*(tot[1]+.5*tot[3])/n,'%'),rk('efg')],
     ['Distanza media',fmt(tot[4]/n,' ft'),''],
     ['Quota da 3',fmt(100*tot[2]/n,'%'),'']];
-  $('#thero').innerHTML=`<div class="top"><div class="info"><div class="tkick">Squadra · regular season</div><h1>${tm.name}</h1><select id="tsea" aria-label="Stagione">${ks.map(k=>`<option ${k==tse?'selected':''}>${k}</option>`).join('')}</select></div><div class="tlogo"><img src="${logo(id)}" alt="${tm.name}" onerror="this.style.display='none'"></div></div>
+  const rr=po?'':recRank(sum,tse,id),
+    rec=X.r?`<div class="rec"><b>${X.r[0]}–${X.r[1]}</b><span>${po?'bilancio playoff':'record'}${rr?' · '+rr:''}</span></div>`:'';
+  $('#thero').innerHTML=head(`<select id="tsea" aria-label="Stagione">${ks.map(k=>`<option ${k==tse?'selected':''}>${k}</option>`).join('')}</select>`,rec)+`
   <div class="stats">${tiles.map(([k,v,r])=>`<div><b>${v}</b><span>${k}</span>${r}</div>`).join('')}</div>`;
   $('#tsea').onchange=ev=>{tse=ev.target.value;renderTeam()};
   const lg=lgs(tse);let svg;
   if(!d||!n)svg='<text x="0" y="-200" text-anchor="middle" fill="#8b99ad" font-size="16">Nessun dato per questa stagione</text>';
   else if(S.tv=='heat')svg=heatH(expand(d.cells),lg);
-  else{const Z={};for(const[k,z]of Object.entries(d.zones))Z[k]={n:z[0],m:z[1],x:z[2],y:z[3]};svg=zoneH(Z,lg,30)}
+  else{const Z={};for(const[k,z]of Object.entries(d.zones))Z[k]={n:z[0],m:z[1],x:z[2],y:z[3]};svg=zoneH(Z,lg,po?10:30)}
   const lo=att?['Sotto la media','Sopra la media']:['Concede meno della media','Concede più della media'];
   $('#tmap').innerHTML=`<div class="row"><div class="grp seg" data-tk="td"><button data-v="o" class="${att?'on':''}">Attacco</button><button data-v="d" class="${att?'':'on'}">Difesa</button></div><div class="grp" data-tk="tv"><button data-v="heat" class="${S.tv=='heat'?'on':''}">Heatmap</button><button data-v="zone" class="${S.tv=='zone'?'on':''}">Zone</button></div></div>
   ${svgC(svg)}<div class="lgd"><span>${lo[0]}</span><div class="bar"></div><span>${lo[1]}</span><span class="note">Dimensione = frequenza</span></div>
-  <div class="cmt"><ul><li>${att?'Mappa dei tiri presi dalla squadra.':'Mappa dei tiri concessi agli avversari: dove segnano contro questa squadra.'} Il confronto è con la media NBA della stagione, solo regular season.</li></ul></div>`;
-  const ro=P.filter(p=>p.s[tse]&&p.s[tse].tid==id).sort((a,b)=>b.s[tse].fga-a.s[tse].fga);
-  $('#troster').innerHTML='<h2>Roster<small>giocatori con almeno 50 tiri in carriera, per tiri tentati nella stagione</small></h2>'+(ro.length?ro.map(p=>{const x=p.s[tse];return`<button class="rr" data-id="${p.id}"><img src="${photo(p.id)}" alt="" loading="lazy" onerror="this.onerror=null;this.src=FALL"><span>${p.name}</span><em>${x.fga} tiri</em><b>${(100*x.fgm/x.fga).toFixed(1)}%</b></button>`}).join(''):'<div class="msg">Nessun giocatore trovato per questa stagione.</div>')+'<div class="rpl">Chi è stato scambiato compare solo nella squadra con cui ha tirato di più.</div>';
+  <div class="cmt"><ul><li>${att?'Mappa dei tiri presi dalla squadra.':'Mappa dei tiri concessi agli avversari: dove segnano contro questa squadra.'} Il confronto è con la media NBA della regular season${po?', anche per i playoff':''}.</li></ul></div>`;
+  let ro;
+  if(X.l&&X.l.length)ro=X.l.map(r=>({p:pid(r[0]),fga:r[1],fgm:r[2]})).filter(x=>x.p).slice(0,18);
+  else if(!po)ro=P.filter(p=>p.s[tse]&&p.s[tse].tid==id).sort((a,b)=>b.s[tse].fga-a.s[tse].fga).map(p=>({p,fga:p.s[tse].fga,fgm:p.s[tse].fgm}));
+  else ro=[];
+  $('#troster').innerHTML='<h2>Roster<small>giocatori con almeno 50 tiri in carriera, per tiri tentati</small></h2>'+(X.l&&X.l.length?leaders(X.l,po):'')+(ro.length?'<h3 class="rh">Giocatori</h3>'+ro.map(({p,fga,fgm})=>`<button class="rr" data-id="${p.id}"><img src="${photo(p.id)}" alt="" loading="lazy" onerror="this.onerror=null;this.src=FALL"><span>${p.name}</span><em>${fga} tiri</em><b>${(100*fgm/fga).toFixed(1)}%</b></button>`).join(''):'<div class="msg">Nessun giocatore trovato per questa stagione.</div>')+`<div class="rpl">${X.l&&X.l.length?'Conta i tiri fatti con questa maglia, anche per chi è stato scambiato.':'Chi è stato scambiato compare solo nella squadra con cui ha tirato di più.'}</div>`;
+  $('#tsint').innerHTML=sintesi(sum,tse,id,side,po);
+  $('#tevo').innerHTML=sum?evo(sum,id,S.te,tse):'';
   pushHash();
 }
-$('#tmap').addEventListener('click',e=>{const b=e.target.closest('button[data-tk]')||e.target.closest('.grp[data-tk] button');if(!b)return;const k=b.closest('.grp').dataset.tk;S[k]=b.dataset.v;renderTeam()});
-$('#troster').addEventListener('click',async e=>{const b=e.target.closest('.rr');if(!b)return;const p=P.find(x=>x.id==b.dataset.id);if(!p)return;await setMode(0,true);pick(p,tse)});
+$('#teamv').addEventListener('click',async e=>{
+  const b=e.target.closest('.grp[data-tk] button');
+  if(b){S[b.closest('.grp').dataset.tk]=b.dataset.v;renderTeam();return}
+  const r=e.target.closest('[data-s]');
+  if(r){const tf=await teamFile(tcur).catch(()=>null);tse=r.dataset.s;if(S.tp=='1'&&!(tf&&tf.seasons[tse]&&tf.seasons[tse].p))S.tp='0';renderTeam();return}
+  const c=e.target.closest('[data-id]');if(!c)return;
+  const p=pid(+c.dataset.id);if(!p)return;await setMode(0,true);pick(p,tse)});
 $('#hero').addEventListener('click',e=>{if(!e.target.closest('.tm')||!cur)return;tcur=cur.s[season].tid;tse=season;setMode(2)});
 function pickTeam(id){tcur=id;renderTeam()}
 const shareName=()=>S.mode==2&&T[tcur]?T[tcur].name:cur.name;
@@ -408,7 +500,7 @@ function fillOpp(){
   $('#opp').innerHTML='<option value="">Tutti gli avversari</option>'+[...o].sort().map(x=>`<option value="${x}" ${x==S.opp?'selected':''}>${x}${tn(x)}</option>`).join('')}
 $('#opp').onchange=e=>{S.opp=e.target.value;if(sh)draw()};
 const HK=['view','st','ty','rs','q','cv','opp'];
-function hashOut(){const u=new URLSearchParams();if(cur){u.set('p',cur.id);u.set('s',season)}HK.forEach(k=>u.set(k,S[k]));if(S.mode==1&&cur2){u.set('m',1);u.set('c',cur2.id);u.set('s2',season2)}else if(S.mode==2&&tcur){u.set('m',2);u.set('t',tcur);u.set('ts',tse);u.set('td',S.td);u.set('tv',S.tv)}return u.toString()}
+function hashOut(){const u=new URLSearchParams();if(cur){u.set('p',cur.id);u.set('s',season)}HK.forEach(k=>u.set(k,S[k]));if(S.mode==1&&cur2){u.set('m',1);u.set('c',cur2.id);u.set('s2',season2)}else if(S.mode==2&&tcur){u.set('m',2);u.set('t',tcur);u.set('ts',tse);u.set('td',S.td);u.set('tv',S.tv);u.set('tp',S.tp);u.set('te',S.te)}return u.toString()}
 function pushHash(){try{history.replaceState(null,'','#'+hashOut())}catch(e){}}
 function applyHash(){const u=new URLSearchParams(location.hash.slice(1));if(!u.has('p'))return null;HK.forEach(k=>{if(u.has(k))S[k]=u.get(k)});return u}
 function syncUI(){document.querySelectorAll('.grp[data-k]').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v==S[g.dataset.k])));syncRs()}
