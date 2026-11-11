@@ -2,7 +2,7 @@
 
 Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, stagione per stagione. Web app responsive, scritta in HTML, CSS e JavaScript puro, pensata per essere pubblicata su GitHub Pages.
 
-**Demo:** https://matrixr92.github.io/nba-shot-lab/
+**Demo:** https://TUO-USERNAME.github.io/nba-shot-lab/
 
 ## Cosa fa
 
@@ -32,10 +32,10 @@ Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, s
 
 ## Fonti dei dati e crediti
 
-- **Dati dei tiri**: dataset pubblico [shufinskiy/nba_data](https://github.com/shufinskiy/nba_data) di [@shufinskiy](https://github.com/shufinskiy), che raccoglie i dati dei tiri (shot detail) dalle statistiche ufficiali della NBA. Un grande grazie all'autore per averli resi disponibili. Per le condizioni d'uso del dataset fai riferimento al suo repository.
+- **Dati dei tiri**: statistiche ufficiali della NBA (NBA Stats), scaricate con la libreria [nba_api](https://github.com/swar/nba_api).
 - **Origine dei dati**: statistiche di NBA.com ([stats.nba.com](https://www.nba.com/stats)). Tutti i diritti sui dati appartengono alla NBA.
 - **Foto dei giocatori e loghi delle squadre**: non sono contenuti in questo repository, vengono caricati al momento dal server della NBA (`cdn.nba.com`). Appartengono alla NBA, alle squadre e ai rispettivi titolari.
-- **Libreria [nba_api](https://github.com/swar/nba_api)** di Swar Patel: usata solo dallo script di preparazione dei dati, per l'elenco delle squadre.
+- **Libreria [nba_api](https://github.com/swar/nba_api)** di Swar Patel: usata dallo script di preparazione per leggere l'API della NBA.
 - **Font**: [Barlow e Barlow Condensed](https://fonts.google.com/specimen/Barlow) di Jeremy Tribby, tramite Google Fonts (licenza SIL Open Font License).
 
 > Shot Lab è un progetto personale, senza scopo di lucro. Non è affiliato, sponsorizzato né approvato dalla NBA o dalle sue squadre. Nomi, loghi e immagini sono marchi dei rispettivi proprietari.
@@ -44,17 +44,20 @@ Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, s
 
 ```
 nba-shot-lab/
-├── index.html        ← il sito (tutto in un file: HTML, CSS e JavaScript)
-├── build_data.py     ← script che prepara i dati
-└── data/             ← file JSON generati dallo script
-    ├── meta.json         informazioni generali
-    ├── players.json      elenco giocatori, stagioni e squadre
-    ├── teams.json        elenco squadre
-    ├── league.json       medie di lega per zona e per cella del campo
-    └── shots/<stagione>/<id giocatore>.json
+├── index.html            il sito (HTML, CSS e JavaScript in un solo file)
+├── manifest.webmanifest  per aggiungerlo alla schermata Home
+├── icons/                icone dell'app
+├── scripts/
+│   └── build_database.py script che scarica e prepara i dati
+└── data/                 file JSON generati dallo script
+    ├── meta.json             informazioni generali
+    ├── players.json          elenco giocatori, stagioni e squadre
+    ├── teams.json            elenco squadre
+    ├── league.json           medie di lega per zona e per cella del campo
+    └── players/<id>.json     tutti i tiri di un giocatore, stagione per stagione
 ```
 
-`build_data.py` scarica i dataset delle stagioni, li elabora e scrive un piccolo file JSON per ogni giocatore e stagione. Ogni tiro è salvato come lista compatta di numeri (posizione, esito, distanza, quarto, tipo, data, avversario, tipo di azione, zona, playoff). Il sito legge solo i file che servono, quindi resta veloce anche da telefono.
+`scripts/build_database.py` legge l'API NBA a finestre di date, tiene i dati grezzi in `cache/` (che non va caricata su GitHub) e scrive un file JSON per ogni giocatore. Ogni tiro è una lista compatta di numeri (posizione, esito, distanza, quarto, tipo, data, avversario, tipo di azione, zona, playoff, stagione). Il sito carica solo il file del giocatore scelto, quindi resta veloce anche da telefono.
 
 ## Provarlo in locale
 
@@ -68,13 +71,9 @@ Poi apri http://localhost:8000.
 
 ## Aggiornare i dati
 
-Servono Python 3 e alcune librerie:
+Servono Python 3 e alcune librerie: `pip install nba_api pandas numpy`.
 
-```bash
-pip3 install requests pandas numpy nba_api
-python3 build_data.py
-```
+- **Prima volta** (tutte le stagioni, dal 1996-97): lancia `scripts/build_database.py`. Ci vuole del tempo, ma si può interrompere e rilanciare: riparte da dove era arrivato.
+- **Aggiornamenti**: rilancia lo script. Le stagioni concluse non vengono riscaricate, per quella in corso vengono riprese le ultime tre settimane. Per una sola stagione: `build_database.py 2026` (2026 = 2026-27).
 
-In cima a `build_data.py` si possono cambiare le stagioni coperte (`PRIMA_STAGIONE`, `ULTIMA_STAGIONE`) e il numero minimo di tiri per includere un giocatore (`MIN_FGA`). I dataset scaricati finiscono nella cartella `cache/`, che non va caricata su GitHub.
-
-La copertura dei dati dipende dal dataset di origine: le stagioni più recenti compaiono solo quando l'autore le aggiunge.
+Poi basta fare commit e push della cartella `data/`. Le partite di play-in non sono incluse.
