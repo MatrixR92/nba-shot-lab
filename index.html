@@ -100,8 +100,9 @@ main.teamm{grid-template-columns:minmax(0,1fr);grid-template-areas:"t";grid-temp
 #court.rp .hex{animation:none}
 .sec{margin-top:24px}
 #hero .tm{cursor:pointer;width:fit-content}#hero .tm:hover span{color:var(--txt)}
-.tgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:start;grid-template-areas:"h c" "r c" "s e"}
-#thero{grid-area:h;background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 30%,var(--card)),var(--card) 65%)}#tmap{grid-area:c}#troster{grid-area:r}#tsint{grid-area:s}#tevo{grid-area:e}
+.tgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:start}
+.tcol{display:flex;flex-direction:column;gap:16px;min-width:0}
+#thero{background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 30%,var(--card)),var(--card) 65%)}
 .tlogo{flex:0 0 34%;align-self:center;padding:4px}.tlogo img{display:block;width:100%;max-height:190px;object-fit:contain}
 .tkick{color:var(--mut);font-size:14px}
 .trow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
@@ -120,7 +121,7 @@ main.teamm{grid-template-columns:minmax(0,1fr);grid-template-areas:"t";grid-temp
 .rr:last-child{border-bottom:0}.rr:hover{background:var(--hov)}
 .rr img{width:44px;height:32px;object-fit:cover;object-position:top;border-radius:6px;background:var(--line)}
 .rr span{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rr em{font-style:normal;font-size:13px;color:var(--mut)}.rr b{font:700 18px/1 var(--fh);color:var(--act);min-width:48px;text-align:right}
-@media(max-width:860px){.tgrid{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "c" "r" "s" "e"}}
+@media(max-width:860px){.tgrid{grid-template-columns:minmax(0,1fr)}.tcol{display:contents}#thero{order:1}#tmap{order:2}#troster{order:3}#tsint{order:4}#tevo{order:5}}
 #cmt2{grid-column:1/-1}#cmt2 ul{margin:0;grid-template-columns:repeat(3,1fr);gap:10px}
 @media(min-width:861px){.cc .cmt{display:none}}
 @media(max-width:860px){#cmt2{display:none}}
@@ -185,7 +186,7 @@ main.teamm{grid-template-columns:minmax(0,1fr);grid-template-areas:"t";grid-temp
     <div class="row"><div class="grp seg" data-k="cv"><button data-v="side" class="on">Affiancati</button><button data-v="diff">Differenza</button></div></div>
     <div id="cmpf"></div><div id="cout"></div><div id="ctab" class="sec"></div><div id="cdist" class="sec"></div>
   </section>
-  <section id="teamv" hidden><div class="tgrid"><section class="card" id="thero"></section><section class="card" id="tmap"></section><section class="card" id="troster"></section><section class="card" id="tsint"></section><section class="card" id="tevo"></section></div></section>
+  <section id="teamv" hidden><div class="tgrid"><div class="tcol"><section class="card" id="thero"></section><section class="card" id="troster"></section></div><div class="tcol"><section class="card" id="tmap"></section><section class="card" id="tsint"></section><section class="card" id="tevo"></section></div></div></section>
 </main>
 <footer>Dati dalle statistiche NBA, scaricati con la libreria nba_api. Progetto personale, non affiliato alla NBA.</footer>
 <script>
