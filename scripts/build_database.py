@@ -70,6 +70,18 @@ def scrivi_json(percorso, dati):
                         encoding="utf-8")
 
 
+def stagione_completa(season):
+    """Pronta solo se esistono .npz e .json e il .json è della versione con i dati squadra."""
+    base = CACHE / "stagioni"
+    js = base / f"{season}.json"
+    if not ((base / f"{season}.npz").exists() and js.exists()):
+        return False
+    try:
+        return json.loads(js.read_text(encoding="utf-8")).get("v") == 2
+    except Exception:
+        return False
+
+
 def finestre(anno, oggi):
     """Mesi da ottobre dell'anno d'inizio a ottobre dell'anno dopo (copre anche la
     'bolla' del 2020 e la stagione 2020-21, che uscirono dal calendario normale)."""
@@ -141,6 +153,34 @@ def dati_finestra(season, tipo, ini, fin, oggi):
     return (df[COLONNE_API] if len(df) else None), True
 
 
+def aggrega_squadre(reg, sigla):
+    """Per ogni squadra: i tiri che ha preso (attacco, 'o') e quelli che ha concesso agli
+    avversari (difesa, 'd'). Solo regular season, già aggregati per cella del campo,
+    così i file restano leggeri.
+    Totali: [tentati, segnati, da 3 tentati, da 3 segnati, somma distanze]."""
+    inv = {v: k for k, v in sigla.items()}
+    r = reg.copy()
+    r["DTID"] = r["OPP"].map(inv)
+    r["CX"] = ((r["LOC_X"] - X_MIN) // CELLA).astype(int)
+    r["CY"] = ((r["LOC_Y"] - Y_MIN) // CELLA).astype(int)
+    partite = {int(t): int(n) for t, n in r.groupby("TEAM_ID")["GAME_ID"].nunique().items()}
+    out = {}
+    for lato, chiave in (("o", "TEAM_ID"), ("d", "DTID")):
+        for tid, g in r.dropna(subset=[chiave]).groupby(chiave):
+            tid = int(tid)
+            t3 = g["TYPE"] == 3
+            tot = [int(len(g)), int(g["SHOT_MADE_FLAG"].sum()), int(t3.sum()),
+                   int(g["SHOT_MADE_FLAG"][t3].sum()), int(g["SHOT_DISTANCE"].sum())]
+            dentro = g[(g["CX"] >= 0) & (g["CX"] < COLS) & (g["CY"] >= 0) & (g["CY"] < RIGHE)]
+            celle = [[int(a), int(b), int(len(x)), int(x["SHOT_MADE_FLAG"].sum())]
+                     for (a, b), x in dentro.groupby(["CX", "CY"])]
+            zone = {k: [int(len(x)), int(x["SHOT_MADE_FLAG"].sum()), int(x["LOC_X"].sum()), int(x["LOC_Y"].sum())]
+                    for k, x in g.groupby("ZONE")}
+            e = out.setdefault(str(tid), {"g": partite.get(tid, 0)})
+            e[lato] = {"t": tot, "cells": celle, "zones": zone}
+    return out
+
+
 # --- Passo 1: una stagione alla volta -----------------------------------------------
 def salva_stagione(season, pezzi, C):
     df = pd.concat(pezzi, ignore_index=True)
@@ -194,7 +234,8 @@ def salva_stagione(season, pezzi, C):
     griglia = {f"{a},{b}": [int(len(x)), int(x["m"].sum())] for (a, b), x in celle.groupby(["cx", "cy"])}
 
     scrivi_json(cartella / f"{season}.json",
-                {"stats": stats, "nomi": nomi, "lega": {"zones": zone, "grid": griglia}})
+                {"v": 2, "stats": stats, "nomi": nomi, "lega": {"zones": zone, "grid": griglia},
+                 "squadre": aggrega_squadre(reg, sigla)})
     np.savez_compressed(cartella / f"{season}.npz",
                         **{k: np.asarray(v).astype(np.int32) for k, v in arr.items()})
 
@@ -205,7 +246,7 @@ def salva_stagione(season, pezzi, C):
 def assembla(seasons, C):
     colonne = ["pid", "tid", "x", "y", "made", "dist", "period", "type", "date", "opp", "action", "zone", "po"]
     parti = {c: [] for c in colonne}
-    se, nomi, stats, lega = [], {}, {}, {}
+    se, nomi, stats, lega, sq, riepilogo = [], {}, {}, {}, {}, {}
     for i, s in enumerate(seasons):
         z = np.load(CACHE / "stagioni" / f"{s}.npz")
         for c in colonne:
@@ -216,6 +257,10 @@ def assembla(seasons, C):
         for k, v in j["stats"].items():
             stats.setdefault(int(k), {})[s] = {"fga": v[0], "fgm": v[1], "tid": v[2]}
         lega[s] = j["lega"]
+        for tid, e in j.get("squadre", {}).items():
+            sq.setdefault(tid, {})[s] = {"g": e["g"], "o": e.get("o"), "d": e.get("d")}
+            riepilogo.setdefault(s, {})[tid] = {"g": e["g"], "o": (e.get("o") or {}).get("t"),
+                                                "d": (e.get("d") or {}).get("t")}
     A = {c: np.concatenate(v) for c, v in parti.items()}
     A["se"] = np.concatenate(se)
     del parti
@@ -251,13 +296,21 @@ def assembla(seasons, C):
             "shots": M.tolist()})
         inclusi.append(int(p))
 
+    cart_sq = DATA / "teams"
+    cart_sq.mkdir(parents=True, exist_ok=True)
+    for f in cart_sq.glob("*.json"):
+        f.unlink()
+    for tid, stag in sq.items():
+        scrivi_json(cart_sq / f"{tid}.json", {"team": int(tid), "cell": CELLA, "seasons": stag})
+    scrivi_json(DATA / "team_summary.json", {"seasons": riepilogo})
+
     scrivi_json(DATA / "players.json",
                 sorted(({"id": p, "name": nomi[p], "s": stats[p]} for p in inclusi), key=lambda e: e["name"]))
     scrivi_json(DATA / "league.json", {"cell": CELLA, "xmin": X_MIN, "ymin": Y_MIN,
                                        "cols": COLS, "rows": RIGHE, "seasons": lega})
     scrivi_json(DATA / "teams.json", [{"id": t["id"], "name": t["full_name"], "abbr": t["abbreviation"]}
                                       for t in teams.get_teams()])
-    scrivi_json(DATA / "meta.json", {"format": 2, "seasons": seasons, "min_fga": MIN_FGA,
+    scrivi_json(DATA / "meta.json", {"format": 3, "seasons": seasons, "min_fga": MIN_FGA,
                                      "shot_fields": CAMPI, "generated": datetime.date.today().isoformat(),
                                      "source": "NBA Stats API via nba_api"})
     return len(inclusi)
@@ -275,12 +328,11 @@ def main():
 
     for anno in anni:
         season = nome_stagione(anno)
-        npz = CACHE / "stagioni" / f"{season}.npz"
         lavoro = [(t, i, f) for i, f in finestre(anno, oggi) for t in ("Regular Season", "Playoffs")
                   if serve(t, i, anno)]
         mancano = [x for x in lavoro
                    if fresca(x[2], oggi) or not any(p.exists() for p in percorsi(season, x[0], x[1]))]
-        if not mancano and npz.exists() and npz.with_suffix(".json").exists():
+        if not mancano and stagione_completa(season):
             print(f"{season}: già aggiornata")
             continue
         print(f"\n{season}: {len(mancano)} richieste da fare")

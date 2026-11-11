@@ -15,6 +15,7 @@ Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, s
 - **Filtri**: stagione, regular season o playoff, tiri da 2 o da 3 punti, quarto.
 - **Istogramma** dei tiri per distanza, con la percentuale di realizzazione per fascia.
 - **Modalità Confronto**: due giocatori (o lo stesso giocatore in due stagioni) con heatmap affiancate, una mappa delle differenze, tabella testa a testa e confronto delle distanze di tiro.
+- **Vista Squadra**: ricerca squadra, stagione (regular season), mappa di **attacco** (dove tira) e di **difesa** (dove concede i tiri agli avversari) in heatmap o zone, statistiche con piazzamento nella lega (FG%, 3P%, eFG%) e roster con giocatori cliccabili che portano alla vista giocatore.
 - **Filtro per avversario** e **commenti automatici** sotto la mappa (zona più forte, zona più debole, quota di tiri da 3).
 - **Come tira**: barre per tipo di tiro (schiacciate, entrate e appoggi, jump shot, step-back, floater…) con quota sul totale e percentuale di realizzazione.
 - **Andamento nella stagione**: percentuale dal campo sulle ultime 10 partite, con la media della stagione, il periodo migliore e quello più freddo.
@@ -54,6 +55,8 @@ nba-shot-lab/
     ├── players.json          elenco giocatori, stagioni e squadre
     ├── teams.json            elenco squadre
     ├── league.json           medie di lega per zona e per cella del campo
+    ├── team_summary.json     totali di attacco e difesa di ogni squadra (per i piazzamenti)
+    ├── teams/<id>.json       attacco e difesa di una squadra, stagione per stagione
     └── players/<id>.json     tutti i tiri di un giocatore, stagione per stagione
 ```
 

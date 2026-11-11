@@ -18,7 +18,7 @@
 <style>
 :root{color-scheme:dark;--acc:#fdb927;--act:var(--acc);--ln:#ffffff47;--tile:#0a0e1566;--ms:#9fb0c8;--mkst:#0a0e15;--grpbg:#0a0e15;--hov:#18233a;--c1:#17233a;--c2:#0d1422;--dk:0%;--ink:#0a0e15;--bg:#0a0e15;--card:#111826;--line:#1e293b;--txt:#e8edf5;--mut:#8b99ad;--fh:'Barlow Condensed','Arial Narrow',sans-serif;--fb:'Barlow',system-ui,sans-serif}
 :root[data-theme=light]{color-scheme:light;--bg:#eef2f7;--card:#fff;--line:#dde4ee;--txt:#0f172a;--mut:#5a6b82;--ln:#0f172a59;--tile:#0f172a0d;--ms:#64748b;--mkst:#fff;--grpbg:#e6ecf4;--hov:#eef2f7;--c1:#fff;--c2:#e4eaf3;--dk:38%;--ink:#0f172a;--act:color-mix(in srgb,var(--acc) 62%,#0f172a)}
-:root[data-theme=light] #sea,:root[data-theme=light] .sel{background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%230f172a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+:root[data-theme=light] #sea,:root[data-theme=light] #tsea,:root[data-theme=light] .sel{background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%230f172a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
 .tc{color:color-mix(in srgb,var(--c),var(--ink) var(--dk))}
 .ln{stroke:var(--ln)}
 .tbtn{background:var(--card);border:1px solid var(--line);border-radius:10px;width:40px;height:40px;display:grid;place-items:center;color:var(--txt);cursor:pointer}
@@ -31,7 +31,7 @@ header{display:flex;gap:16px;align-items:center;justify-content:space-between;ma
 .search{position:relative;flex:1;max-width:420px}
 #q{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
 #q:focus,button:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-#res{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;z-index:5}
+#res{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:auto;max-height:60vh;z-index:5}
 #res:empty{display:none}
 #res button{display:flex;align-items:center;gap:10px;width:100%;padding:7px 12px;background:none;border:0;text-align:left;cursor:pointer}
 #res button:hover{background:var(--hov)}
@@ -44,7 +44,7 @@ main{display:grid;gap:16px;max-width:1180px;margin:0 auto;padding:0 16px 24px;gr
 .info{flex:1;min-width:0;padding-bottom:6px}
 .tm{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:15px}.tm img{width:50px;height:50px;object-fit:contain}
 h1{font:800 clamp(38px,6vw,58px)/.92 var(--fh);margin:8px 0 12px}
-#sea,.sel{appearance:none;-webkit-appearance:none;cursor:pointer;font-weight:600;font-size:15px;background:#0a0e15 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23e8edf5' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center/12px 8px;border:1.5px solid var(--acc);border-radius:10px;padding:9px 38px 9px 14px;line-height:1.2}
+#sea,#tsea,.sel{appearance:none;-webkit-appearance:none;cursor:pointer;font-weight:600;font-size:15px;background:#0a0e15 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23e8edf5' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center/12px 8px;border:1.5px solid var(--acc);border-radius:10px;padding:9px 38px 9px 14px;line-height:1.2}
 .ph{flex:0 0 44%;align-self:flex-end;padding:16px 10px 0;border-radius:14px;background:radial-gradient(ellipse at 50% 100%,color-mix(in srgb,var(--acc) 40%,transparent),transparent 72%)}.ph img{display:block;width:100%;aspect-ratio:1040/760;object-fit:cover;object-position:top;border-radius:10px 10px 0 0}
 .stats{display:grid;flex:1;grid-auto-rows:1fr;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
 .stats div{background:var(--tile);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;justify-content:center}
@@ -70,7 +70,8 @@ h2{font:700 22px/1 var(--fh);margin-bottom:14px}h2 small{font:400 13px var(--fb)
 .hist em{font-style:normal;font-size:11px;color:var(--mut);height:16px;white-space:nowrap}.hist u{flex:1;width:100%;display:flex;align-items:flex-end}
 .hist i{display:block;width:100%;min-height:2px;background:var(--act);border-radius:4px 4px 0 0;opacity:.9}.hist span{font-size:11px;color:var(--mut);margin-top:4px;white-space:nowrap}.hist small{font-size:inherit}
 .msg{padding:24px;color:var(--mut)}footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;font-size:12px;color:var(--mut)}
-main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-template-rows:auto}main.cmp>#hero,main.cmp>.cc,main.cmp>.dd,main.cmp>#more{display:none}#cmpv{grid-area:v}
+main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-template-rows:auto}main.cmp>#hero,main.cmp>.cc,main.cmp>.dd,main.cmp>#more,main.cmp>#teamv{display:none}#cmpv{grid-area:v}
+main.teamm{grid-template-columns:minmax(0,1fr);grid-template-areas:"t";grid-template-rows:auto}main.teamm>#hero,main.teamm>.cc,main.teamm>.dd,main.teamm>#more,main.teamm>#cmpv{display:none}#teamv{grid-area:t}
 .modebar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between;max-width:1180px;margin:0 auto;padding:0 16px 14px}.modebar .search{flex:1 1 240px;max-width:420px}
 #cards,.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}#cards{margin-bottom:12px}
 .mc{display:flex;gap:10px;align-items:center;background:var(--grpbg);border:1px solid var(--c);border-radius:12px;padding:8px;min-width:0}
@@ -98,6 +99,18 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
 .rpb #rpr{background:var(--grpbg);color:var(--txt)}.rpb input{flex:1;min-width:0;accent-color:var(--acc)}.rpl{margin-top:6px;font-size:13px;color:var(--mut)}
 #court.rp .hex{animation:none}
 .sec{margin-top:24px}
+#hero .tm{cursor:pointer;width:fit-content}#hero .tm:hover span{color:var(--txt)}
+.tgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:start;grid-template-areas:"h c" "r c"}
+#thero{grid-area:h;background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 30%,var(--card)),var(--card) 65%)}#tmap{grid-area:c}#troster{grid-area:r}
+.tlogo{flex:0 0 34%;align-self:center;padding:4px}.tlogo img{display:block;width:100%;max-height:190px;object-fit:contain}
+.tkick{color:var(--mut);font-size:14px}
+.stats b{white-space:nowrap}
+.stats .rk{display:block;font-size:12px;color:var(--act);margin-top:2px;font-weight:600}
+.rr{display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;gap:10px;align-items:center;width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:8px 4px;text-align:left;cursor:pointer;border-radius:0}
+.rr:last-child{border-bottom:0}.rr:hover{background:var(--hov)}
+.rr img{width:44px;height:32px;object-fit:cover;object-position:top;border-radius:6px;background:var(--line)}
+.rr span{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rr em{font-style:normal;font-size:13px;color:var(--mut)}.rr b{font:700 18px/1 var(--fh);color:var(--act);min-width:48px;text-align:right}
+@media(max-width:860px){.tgrid{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "c" "r"}}
 #cmt2{grid-column:1/-1}#cmt2 ul{margin:0;grid-template-columns:repeat(3,1fr);gap:10px}
 @media(min-width:861px){.cc .cmt{display:none}}
 @media(max-width:860px){#cmt2{display:none}}
@@ -120,7 +133,7 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
   <button class="tbtn" id="theme" aria-label="Cambia tema chiaro/scuro" title="Tema chiaro/scuro"><svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></button>
   <div class="pop" id="shm" hidden><button id="cl">Condividi link</button><button id="im">Immagine della mappa</button></div></div>
 </header>
-<nav class="modebar"><div class="grp seg" id="modes"><button data-v="0" class="on">Giocatore</button><button data-v="1">Confronto</button></div>
+<nav class="modebar"><div class="grp seg" id="modes"><button data-v="0" class="on">Giocatore</button><button data-v="1">Confronto</button><button data-v="2">Squadra</button></div>
   <div class="search"><input id="q" type="search" placeholder="Cerca un giocatore" autocomplete="off" aria-label="Cerca un giocatore"><div id="res"></div></div>
 </nav>
 <main>
@@ -162,14 +175,15 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
     <div class="row"><div class="grp seg" data-k="cv"><button data-v="side" class="on">Affiancati</button><button data-v="diff">Differenza</button></div></div>
     <div id="cmpf"></div><div id="cout"></div><div id="ctab" class="sec"></div><div id="cdist" class="sec"></div>
   </section>
+  <section id="teamv" hidden><div class="tgrid"><section class="card" id="thero"></section><section class="card" id="tmap"></section><section class="card" id="troster"></section></div></section>
 </main>
 <footer>Dati dalle statistiche NBA, scaricati con la libreria nba_api. Progetto personale, non affiliato alla NBA.</footer>
 <script>
 const $=s=>document.querySelector(s),DATA='data/';
 const COL={37:'#E03A3E',38:'#2FB463',39:'#FDBB30',40:'#B4975A',41:'#CE1141',42:'#00A3E0',43:'#FEC524',44:'#FFC72C',45:'#CE1141',46:'#E8334A',47:'#FDB927',48:'#F9423A',49:'#2EBD59',50:'#78BE20',51:'#A1A1AA',52:'#F58426',53:'#0F96E6',54:'#FDBB30',55:'#2E8BE6',56:'#E56020',57:'#E03A3E',58:'#8E6DD0',59:'#C4CED4',60:'#29A3F2',61:'#CE1141',62:'#F9A01B',63:'#5D76A9',64:'#E31837',65:'#E8334A',66:'#00A3B8'};
 const FALL='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1e293b"/><circle cx="50" cy="38" r="18" fill="#475569"/><path d="M14 100c4-30 20-38 36-38s32 8 36 38z" fill="#475569"/></svg>');
-const S={view:'heat',st:'a',ty:'a',rs:'a',q:'a',cv:'side',cmp:0,tgt:'b',opp:'',rp:null},cache=new Map();
-let P=[],T={},L={},M={},cur,season,sh,cur2,season2,sh2;
+const S={view:'heat',st:'a',ty:'a',rs:'a',q:'a',cv:'side',cmp:0,mode:0,tgt:'b',opp:'',rp:null,td:'o',tv:'heat'},cache=new Map();
+let P=[],T={},L={},M={},cur,season,sh,cur2,season2,sh2,tcur=null,tse=null;
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const J=u=>fetch(u).then(r=>{if(!r.ok)throw Error(u);return r.json()});
 const pct=(a,b)=>b?(100*a/b).toFixed(1):'–';
@@ -186,7 +200,8 @@ async function init(){
   const last=M.seasons[M.seasons.length-1];
   const u=applyHash(),hp=u&&P.find(x=>x.id==u.get('p'));
   if(hp){syncUI();pick(hp,u.get('s'));
-    if(u.get('m')=='1'){cur2=P.find(x=>x.id==u.get('c'));season2=u.get('s2');if(cur2&&cur2.s[season2])setMode(1);else cur2=null}}
+    if(u.get('m')=='1'){cur2=P.find(x=>x.id==u.get('c'));season2=u.get('s2');if(cur2&&cur2.s[season2])setMode(1);else cur2=null}
+    else if(u.get('m')=='2'&&T[u.get('t')]){tcur=+u.get('t');tse=u.get('ts');S.td=u.get('td')=='d'?'d':'o';S.tv=u.get('tv')=='zone'?'zone':'heat';setMode(2)}}
   else pick(P.filter(p=>p.s[last]).sort((a,b)=>b.s[last].fga-a.s[last].fga)[0]||P[0],last);
 }
 function pick(p,sea){
@@ -197,7 +212,7 @@ function pick(p,sea){
 function hero(){
   const s=cur.s[season],t=T[s.tid]||{},ks=Object.keys(cur.s).sort().reverse();
   document.documentElement.style.setProperty('--acc',COL[s.tid-1610612700]||'#fdb927');
-  $('#hero').innerHTML=`<div class="top"><div class="info"><div class="tm"><img src="https://cdn.nba.com/logos/nba/${s.tid}/global/L/logo.svg" alt="" onerror="this.style.display='none'"><span>${t.name||''}</span></div>
+  $('#hero').innerHTML=`<div class="top"><div class="info"><div class="tm" title="Vedi la squadra"><img src="https://cdn.nba.com/logos/nba/${s.tid}/global/L/logo.svg" alt="" onerror="this.style.display='none'"><span>${t.name||''} ›</span></div>
   <h1>${cur.name}</h1><select id="sea" aria-label="Stagione">${ks.map(k=>`<option ${k==season?'selected':''}>${k}</option>`).join('')}</select></div>
   <div class="ph"><img src="${photo(cur.id)}" alt="${cur.name}" onerror="this.onerror=null;this.src=FALL"></div></div><div class="stats" id="stats"></div>`;
   $('#sea').onchange=e=>{season=e.target.value;hero();load()};
@@ -230,6 +245,12 @@ function heatH(a,lg){let h='';
       h+=`<polygon class="hex" points="${pts}" ${paint(p-lp)}><title>${o.n} tiri · ${pct(o.m,o.n)}% (media NBA ${(lp*100).toFixed(1)}%)</title></polygon>`;
     }
   return h}
+function zoneH(Z,lg,min=5){
+  let h='';const zs=Object.entries(Z).filter(([k,z])=>!k.startsWith('Backcourt')&&z.n>=min),mx=Math.max(1,...zs.map(([,z])=>z.n));
+  for(const [k,z] of zs){
+    const l=lg.zones[k],lp=l?l[1]/l[0]:.45,p=(z.m+6*lp)/(z.n+6),r=15+30*Math.sqrt(z.n/mx),X=z.x/z.n,Y=-z.y/z.n;
+    h+=`<g><title>${k.replace('|',' · ')}: ${z.n} tiri, ${pct(z.m,z.n)}% (media NBA ${(lp*100).toFixed(1)}%)</title><circle cx="${X}" cy="${Y}" r="${r}" ${paint(p-lp)} fill-opacity=".9"/><text x="${X}" y="${Y+5}" text-anchor="middle" font-size="${r>26?16:12}" font-weight="700" fill="#0a0e15">${Math.round(100*z.m/z.n)}%</text></g>`}
+  return h}
 function court(a,lg){
   const el=$('#layer'),V=S.view,lgd=$('#legend');let h='';VIS=[];
   lgd.innerHTML=V=='pts'?'<span>● Segnato</span><span>✕ Sbagliato</span>':`<span>Sotto la media</span><div class="bar"></div><span>Sopra la media</span><span class="note">Dimensione = frequenza</span>`;
@@ -243,11 +264,7 @@ function court(a,lg){
   }else{
     const Z={},nm=sh.lookups.zone;
     for(const s of a){const k=nm[s[9]];if(k.startsWith('Backcourt'))continue;const z=Z[k]||(Z[k]={n:0,m:0,x:0,y:0});z.n++;z.m+=s[2];z.x+=s[0];z.y+=s[1]}
-    const zs=Object.entries(Z).filter(([,z])=>z.n>=5),mx=Math.max(1,...zs.map(([,z])=>z.n));
-    for(const [k,z] of zs){
-      const l=lg.zones[k],lp=l?l[1]/l[0]:.45,p=(z.m+6*lp)/(z.n+6),r=15+30*Math.sqrt(z.n/mx),X=z.x/z.n,Y=-z.y/z.n;
-      h+=`<g><title>${k.replace('|',' · ')}: ${z.n} tiri, ${pct(z.m,z.n)}% (media NBA ${(lp*100).toFixed(1)}%)</title><circle cx="${X}" cy="${Y}" r="${r}" ${paint(p-lp)} fill-opacity=".9"/><text x="${X}" y="${Y+5}" text-anchor="middle" font-size="${r>26?16:12}" font-weight="700" fill="#0a0e15">${Math.round(100*z.m/z.n)}%</text></g>`;
-    }
+    h=zoneH(Z,lg);
   }
   el.innerHTML=h;
 }
@@ -301,16 +318,77 @@ async function pickCmp(p){
 $('#cmpv').addEventListener('change',async e=>{const t=e.target.dataset.t;if(!t)return;
   if(t=='a'){season=e.target.value;hero();sh=await shots(cur,season)}else{season2=e.target.value;sh2=await shots(cur2,season2)}drawCmp()});
 $('#cmpv').addEventListener('click',e=>{const b=e.target.closest('.chg');if(!b)return;S.tgt=b.dataset.t;q.placeholder='Scegli il giocatore da sostituire';q.focus()});
-async function setMode(v){
-  if(+v==S.cmp)return;
-  S.cmp=+v;if(S.cmp){stopRp();S.rp=null}$('#modes').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==S.cmp));$('main').classList.toggle('cmp',!!S.cmp);$('#cmpv').hidden=!S.cmp;syncRs();
-  if(S.cmp){
+async function setMode(v,quiet){
+  v=+v;if(v==S.mode)return;
+  const was=S.mode;S.mode=v;S.cmp=v==1?1:0;
+  if(v){stopRp();S.rp=null}
+  $('#modes').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v==v));
+  const mn=$('main');mn.classList.toggle('cmp',v==1);mn.classList.toggle('teamm',v==2);
+  $('#cmpv').hidden=v!=1;$('#teamv').hidden=v!=2;syncRs();
+  q.placeholder=v==2?'Cerca una squadra':'Cerca un giocatore';res.innerHTML='';
+  if(was==1&&v!=1)$('.cc').insertBefore($('#fl'),$('.cw'));
+  if(was==2&&cur)hero();
+  if(v==1){
     $('#cmpf').appendChild($('#fl'));
     if(!cur2){cur2=P.filter(x=>x!==cur&&x.s[season]).sort((x,y)=>y.s[season].fga-x.s[season].fga)[0];season2=season}
     [sh,sh2]=await Promise.all([sh||shots(cur,season),shots(cur2,season2)]);drawCmp();
-  }else{$('.cc').insertBefore($('#fl'),$('.cw'));resetRp();draw()}
+  }else if(v==2){
+    if(!tcur&&cur){tcur=cur.s[season].tid;tse=season}
+    renderTeam();
+  }else if(!quiet){sh?(resetRp(),draw()):load()}
 }
 $('#modes').onclick=e=>{const b=e.target.closest('button');if(b)setMode(b.dataset.v)};
+
+const tfiles=new Map(),teamFile=id=>{if(!tfiles.has(id))tfiles.set(id,J(`${DATA}teams/${id}.json`));return tfiles.get(id)};
+let TSUM=null;const tsum=()=>TSUM||(TSUM=J(DATA+'team_summary.json').catch(()=>{TSUM=null;return null}));
+const logo=id=>`https://cdn.nba.com/logos/nba/${id}/global/L/logo.svg`;
+const expand=cells=>{const c=L.cell,o=[];for(const[cx,cy,n,m]of cells){const x=L.xmin+(cx+.5)*c,y=L.ymin+(cy+.5)*c;for(let i=0;i<n;i++)o.push([x,y,i<m?1:0])}return o};
+const MET={fg:t=>t[1]/t[0],fg3:t=>t[2]?t[3]/t[2]:0,efg:t=>(t[1]+.5*t[3])/t[0]};
+function rank(sum,sea,tid,side,f){
+  const o=sum&&sum.seasons[sea];if(!o)return'';
+  const v=Object.entries(o).filter(([,e])=>e[side]&&e[side][0]>0).map(([id,e])=>[id,f(e[side])]),me=v.find(x=>x[0]==tid);
+  if(!me)return'';
+  return(v.filter(x=>side=='o'?x[1]>me[1]:x[1]<me[1]).length+1)+'ª su '+v.length}
+async function renderTeam(){
+  const id=tcur,sea0=tse;
+  const[tf,sum]=await Promise.all([teamFile(id).catch(()=>{tfiles.delete(id);return null}),tsum()]);
+  if(id!=tcur||S.mode!=2)return;
+  const tm=T[id]||{name:'Squadra',abbr:''};
+  document.documentElement.style.setProperty('--acc',COL[id-1610612700]||'#fdb927');
+  if(!tf||!Object.keys(tf.seasons).length){$('#thero').innerHTML='<div class="msg">Non trovo i dati di questa squadra. Rilancia scripts/build_database.py per generare i file in data/teams/.</div>';$('#tmap').innerHTML='';$('#troster').innerHTML='';return}
+  const ks=Object.keys(tf.seasons).sort().reverse();
+  if(!tf.seasons[tse])tse=ks[0];
+  const e=tf.seasons[tse],side=S.td,d=e[side];
+  const tot=(d&&d.t)||[0,0,0,0,0],n=tot[0],g=e.g||0,att=side=='o';
+  const fmt=(v,u)=>n?v.toFixed(1)+u:'–';
+  const rk=(k)=>{const r=rank(sum,tse,id,side,MET[k]);return r?`<small class="rk">${r}</small>`:''};
+  const tiles=[
+    [att?'Tiri a partita':'Tiri concessi a partita',n&&g?fmt(tot[0]/g,''):'–',''],
+    [att?'FG%':'FG% concesso',fmt(100*tot[1]/n,'%'),rk('fg')],
+    [att?'3P%':'3P% concesso',tot&&tot[2]?fmt(100*tot[3]/tot[2],'%'):'–',rk('fg3')],
+    [att?'eFG%':'eFG% concesso',fmt(100*(tot[1]+.5*tot[3])/n,'%'),rk('efg')],
+    ['Distanza media',fmt(tot[4]/n,' ft'),''],
+    ['Quota da 3',fmt(100*tot[2]/n,'%'),'']];
+  $('#thero').innerHTML=`<div class="top"><div class="info"><div class="tkick">Squadra · regular season</div><h1>${tm.name}</h1><select id="tsea" aria-label="Stagione">${ks.map(k=>`<option ${k==tse?'selected':''}>${k}</option>`).join('')}</select></div><div class="tlogo"><img src="${logo(id)}" alt="${tm.name}" onerror="this.style.display='none'"></div></div>
+  <div class="stats">${tiles.map(([k,v,r])=>`<div><b>${v}</b><span>${k}</span>${r}</div>`).join('')}</div>`;
+  $('#tsea').onchange=ev=>{tse=ev.target.value;renderTeam()};
+  const lg=lgs(tse);let svg;
+  if(!d||!n)svg='<text x="0" y="-200" text-anchor="middle" fill="#8b99ad" font-size="16">Nessun dato per questa stagione</text>';
+  else if(S.tv=='heat')svg=heatH(expand(d.cells),lg);
+  else{const Z={};for(const[k,z]of Object.entries(d.zones))Z[k]={n:z[0],m:z[1],x:z[2],y:z[3]};svg=zoneH(Z,lg,30)}
+  const lo=att?['Sotto la media','Sopra la media']:['Concede meno della media','Concede più della media'];
+  $('#tmap').innerHTML=`<div class="row"><div class="grp seg" data-tk="td"><button data-v="o" class="${att?'on':''}">Attacco</button><button data-v="d" class="${att?'':'on'}">Difesa</button></div><div class="grp" data-tk="tv"><button data-v="heat" class="${S.tv=='heat'?'on':''}">Heatmap</button><button data-v="zone" class="${S.tv=='zone'?'on':''}">Zone</button></div></div>
+  ${svgC(svg)}<div class="lgd"><span>${lo[0]}</span><div class="bar"></div><span>${lo[1]}</span><span class="note">Dimensione = frequenza</span></div>
+  <div class="cmt"><ul><li>${att?'Mappa dei tiri presi dalla squadra.':'Mappa dei tiri concessi agli avversari: dove segnano contro questa squadra.'} Il confronto è con la media NBA della stagione, solo regular season.</li></ul></div>`;
+  const ro=P.filter(p=>p.s[tse]&&p.s[tse].tid==id).sort((a,b)=>b.s[tse].fga-a.s[tse].fga);
+  $('#troster').innerHTML='<h2>Roster<small>giocatori con almeno 50 tiri in carriera, per tiri tentati nella stagione</small></h2>'+(ro.length?ro.map(p=>{const x=p.s[tse];return`<button class="rr" data-id="${p.id}"><img src="${photo(p.id)}" alt="" loading="lazy" onerror="this.onerror=null;this.src=FALL"><span>${p.name}</span><em>${x.fga} tiri</em><b>${(100*x.fgm/x.fga).toFixed(1)}%</b></button>`}).join(''):'<div class="msg">Nessun giocatore trovato per questa stagione.</div>')+'<div class="rpl">Chi è stato scambiato compare solo nella squadra con cui ha tirato di più.</div>';
+  pushHash();
+}
+$('#tmap').addEventListener('click',e=>{const b=e.target.closest('button[data-tk]')||e.target.closest('.grp[data-tk] button');if(!b)return;const k=b.closest('.grp').dataset.tk;S[k]=b.dataset.v;renderTeam()});
+$('#troster').addEventListener('click',async e=>{const b=e.target.closest('.rr');if(!b)return;const p=P.find(x=>x.id==b.dataset.id);if(!p)return;await setMode(0,true);pick(p,tse)});
+$('#hero').addEventListener('click',e=>{if(!e.target.closest('.tm')||!cur)return;tcur=cur.s[season].tid;tse=season;setMode(2)});
+function pickTeam(id){tcur=id;renderTeam()}
+const shareName=()=>S.mode==2&&T[tcur]?T[tcur].name:cur.name;
 const NM={'Restricted Area':'sotto canestro','In The Paint (Non-RA)':'area (fuori dal semicerchio)','Mid-Range':'mid-range','Corner 3':'angoli da 3','Above the Break 3':'da 3 dall\'arco'};
 const fam=k=>{const b=k.split('|')[0];return b.includes('Corner')?'Corner 3':b};
 function commento(a,lg){
@@ -330,16 +408,16 @@ function fillOpp(){
   $('#opp').innerHTML='<option value="">Tutti gli avversari</option>'+[...o].sort().map(x=>`<option value="${x}" ${x==S.opp?'selected':''}>${x}${tn(x)}</option>`).join('')}
 $('#opp').onchange=e=>{S.opp=e.target.value;if(sh)draw()};
 const HK=['view','st','ty','rs','q','cv','opp'];
-function hashOut(){const u=new URLSearchParams();if(cur){u.set('p',cur.id);u.set('s',season)}HK.forEach(k=>u.set(k,S[k]));if(S.cmp&&cur2){u.set('m',1);u.set('c',cur2.id);u.set('s2',season2)}return u.toString()}
+function hashOut(){const u=new URLSearchParams();if(cur){u.set('p',cur.id);u.set('s',season)}HK.forEach(k=>u.set(k,S[k]));if(S.mode==1&&cur2){u.set('m',1);u.set('c',cur2.id);u.set('s2',season2)}else if(S.mode==2&&tcur){u.set('m',2);u.set('t',tcur);u.set('ts',tse);u.set('td',S.td);u.set('tv',S.tv)}return u.toString()}
 function pushHash(){try{history.replaceState(null,'','#'+hashOut())}catch(e){}}
 function applyHash(){const u=new URLSearchParams(location.hash.slice(1));if(!u.has('p'))return null;HK.forEach(k=>{if(u.has(k))S[k]=u.get(k)});return u}
 function syncUI(){document.querySelectorAll('.grp[data-k]').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v==S[g.dataset.k])));syncRs()}
 const slug=t=>norm(t).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-$('#share').onclick=()=>{$('#im').hidden=!!S.cmp;$('#shm').hidden=!$('#shm').hidden};
+$('#share').onclick=()=>{$('#im').hidden=S.mode!=0;$('#shm').hidden=!$('#shm').hidden};
 document.addEventListener('click',e=>{if(!e.target.closest('.hr'))$('#shm').hidden=true});
 $('#cl').onclick=async()=>{
   pushHash();const b=$('#cl'),u=location.href;
-  try{if(navigator.share){await navigator.share({title:cur.name+' · Shot Lab',url:u});$('#shm').hidden=true}
+  try{if(navigator.share){await navigator.share({title:shareName()+' · Shot Lab',url:u});$('#shm').hidden=true}
     else{await navigator.clipboard.writeText(u);b.textContent='Link copiato ✓';setTimeout(()=>{$('#shm').hidden=true;b.textContent='Condividi link'},1200)}}catch(e){$('#shm').hidden=true}};
 $('#im').onclick=()=>{$('#shm').hidden=true;exportImg().catch(()=>alert('Non riesco a creare l\'immagine.'))};
 async function exportImg(){
@@ -428,12 +506,16 @@ document.querySelectorAll('.grp[data-k]').forEach(g=>g.onclick=e=>{
   S[g.dataset.k]=b.dataset.v;g.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x==b));syncRs();if(sh)draw();
 });
 const q=$('#q'),res=$('#res');
+const teamRes=v=>Object.values(T).filter(t=>!v||norm(t.name).includes(v)||norm(t.abbr).startsWith(v)).sort((a,b)=>a.name.localeCompare(b.name)).slice(0,v?8:30).map(t=>`<button data-tid="${t.id}"><img src="${logo(t.id)}" alt="" loading="lazy" style="object-fit:contain;background:none"><span>${t.name}</span><i>${t.abbr}</i></button>`).join('');
+q.onfocus=()=>{if(S.mode==2&&!q.value.trim())res.innerHTML=teamRes('')};
 q.oninput=()=>{
-  const v=norm(q.value.trim());if(v.length<2){res.innerHTML='';return}
+  const v=norm(q.value.trim());
+  if(S.mode==2){res.innerHTML=teamRes(v);return}
+  if(v.length<2){res.innerHTML='';return}
   res.innerHTML=P.filter(p=>norm(p.name).includes(v)).sort((a,b)=>tot(b)-tot(a)).slice(0,8).map(p=>{const k=Object.keys(p.s).sort();
     return`<button data-id="${p.id}"><img src="${photo(p.id)}" alt="" loading="lazy" onerror="this.onerror=null;this.src=FALL"><span>${p.name}</span><i>${k[0].slice(2,4)}–${k[k.length-1].slice(5)}</i></button>`}).join('');
 };
-res.onclick=e=>{const b=e.target.closest('button');if(!b)return;const p=P.find(p=>p.id==b.dataset.id);S.cmp?pickCmp(p):pick(p,season);q.value='';res.innerHTML=''};
+res.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.tid)pickTeam(+b.dataset.tid);else{const p=P.find(p=>p.id==b.dataset.id);S.cmp?pickCmp(p):pick(p,season)}q.value='';res.innerHTML=''};
 document.addEventListener('click',e=>{if(!e.target.closest('.search'))res.innerHTML=''});
 const meta=document.querySelector('meta[name=theme-color]'),root=document.documentElement;
 const syncTh=()=>{meta.content=root.dataset.theme=='light'?'#eef2f7':'#0a0e15'};syncTh();
