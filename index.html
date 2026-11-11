@@ -163,7 +163,7 @@ main.cmp{grid-template-columns:minmax(0,1fr);grid-template-areas:"v";grid-templa
     <div id="cmpf"></div><div id="cout"></div><div id="ctab" class="sec"></div><div id="cdist" class="sec"></div>
   </section>
 </main>
-<footer>Dati dai tiri NBA raccolti nel dataset shufinskiy/nba_data. Progetto personale, non affiliato alla NBA.</footer>
+<footer>Dati dalle statistiche NBA, scaricati con la libreria nba_api. Progetto personale, non affiliato alla NBA.</footer>
 <script>
 const $=s=>document.querySelector(s),DATA='data/';
 const COL={37:'#E03A3E',38:'#2FB463',39:'#FDBB30',40:'#B4975A',41:'#CE1141',42:'#00A3E0',43:'#FEC524',44:'#FFC72C',45:'#CE1141',46:'#E8334A',47:'#FDB927',48:'#F9423A',49:'#2EBD59',50:'#78BE20',51:'#A1A1AA',52:'#F58426',53:'#0F96E6',54:'#FDBB30',55:'#2E8BE6',56:'#E56020',57:'#E03A3E',58:'#8E6DD0',59:'#C4CED4',60:'#29A3F2',61:'#CE1141',62:'#F9A01B',63:'#5D76A9',64:'#E31837',65:'#E8334A',66:'#00A3B8'};
@@ -365,7 +365,7 @@ async function exportImg(){
   calc(a).slice(0,6).forEach(([k,v,u],i)=>{const cx=60+80+160*i;
     x.font=`700 46px ${cn}`;x.fillStyle=acc;x.fillText(k=='Tiri'?mk+'/'+v:a.length?v.toFixed(1)+(u==' ft'?' ft':''):'–',cx,1306);
     x.font=`500 21px ${bf}`;x.fillStyle='#8b99ad';x.fillText(k=='Tiri'?'Segnati / tentati':k,cx,1338)});
-  x.font=`400 19px ${bf}`;x.fillText('Dati NBA via shufinskiy/nba_data · Progetto non affiliato alla NBA',540,1390);
+  x.font=`400 19px ${bf}`;x.fillText('Dati NBA via nba_api · Progetto non affiliato alla NBA',540,1390);
   cv.toBlob(async b=>{const f=new File([b],`shotlab-${slug(cur.name)}-${season}.png`,{type:'image/png'});
     if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:cur.name+' · Shot Lab'});return}catch(e){if(e.name=='AbortError')return}}
     const u=URL.createObjectURL(b),l=document.createElement('a');l.href=u;l.download=f.name;l.click();setTimeout(()=>URL.revokeObjectURL(u),3000)})}
