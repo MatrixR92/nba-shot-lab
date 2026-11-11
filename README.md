@@ -6,24 +6,32 @@ Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, s
 
 ## Cosa fa
 
-- **Ricerca giocatore** con suggerimenti e foto, su 10 stagioni (dal 2016-17 al 2025-26).
-- **Card del giocatore** con foto, logo della squadra e numeri chiave: tiri segnati/tentati, FG%, 3P%, eFG%, distanza media e quota di tiri da 3.
+Il sito ha tre modalità: **Giocatore**, **Confronto** e **Squadra**. Si parte dalla ricerca e tutto si può condividere con un link.
+
+### Giocatore
+- **Ricerca** con suggerimenti e foto, stagione per stagione dal 1996-97 a oggi.
+- **Card del giocatore** con foto, logo della squadra (cliccabile, apre la vista Squadra) e numeri chiave: tiri segnati/tentati, FG%, 3P%, eFG%, distanza media e quota di tiri da 3.
 - **Tre viste del campo:**
-  - **Punti**: ogni tiro sul mezzo campo, segnati pieni e sbagliati a croce, con filtro segnati/sbagliati.
+  - **Punti**: ogni tiro sul mezzo campo, segnati pieni e sbagliati a croce, con filtro segnati/sbagliati. Toccando o passando vicino a un tiro compare un cartellino con data, avversario, quarto, tipo di tiro, distanza ed esito.
   - **Heatmap**: esagoni dove la dimensione indica la frequenza dei tiri e il colore la percentuale rispetto alla media NBA nella stessa zona (blu sotto la media, rosso sopra).
   - **Zone**: percentuale di realizzazione per area del campo.
-- **Filtri**: stagione, regular season o playoff, tiri da 2 o da 3 punti, quarto.
+- **Filtri**: stagione, regular season o playoff, tiri da 2 o da 3 punti, quarto e avversario.
 - **Istogramma** dei tiri per distanza, con la percentuale di realizzazione per fascia.
-- **Modalità Confronto**: due giocatori (o lo stesso giocatore in due stagioni) con heatmap affiancate, una mappa delle differenze, tabella testa a testa e confronto delle distanze di tiro.
-- **Vista Squadra**: ricerca squadra, stagione (regular season), mappa di **attacco** (dove tira) e di **difesa** (dove concede i tiri agli avversari) in heatmap o zone, statistiche con piazzamento nella lega (FG%, 3P%, eFG%) e roster con giocatori cliccabili che portano alla vista giocatore.
-- **Filtro per avversario** e **commenti automatici** sotto la mappa (zona più forte, zona più debole, quota di tiri da 3).
 - **Come tira**: barre per tipo di tiro (schiacciate, entrate e appoggi, jump shot, step-back, floater…) con quota sul totale e percentuale di realizzazione.
 - **Andamento nella stagione**: percentuale dal campo sulle ultime 10 partite, con la media della stagione, il periodo migliore e quello più freddo.
 - **Replay della stagione**: un cursore (o il tasto play) fa avanzare la stagione partita dopo partita; mappa, statistiche e grafici crescono con i tiri.
-- **Dettaglio del tiro**: nella vista Punti, toccando o passando vicino a un tiro compare un cartellino con data, avversario, quarto, tipo di tiro, distanza ed esito.
-- **Condividi**: link che riapre la stessa vista (giocatore, stagione, filtri) e immagine della mappa da scaricare o condividere.
+- **In sintesi**: commenti automatici (zona più forte, zona più debole, quota di tiri da 3).
+
+### Confronto
+Due giocatori (o lo stesso giocatore in due stagioni) con heatmap affiancate, mappa delle differenze, tabella testa a testa e confronto delle distanze di tiro.
+
+### Squadra
+Ricerca squadra e stagione (solo regular season). Mappa di **attacco** (dove tira) e di **difesa** (dove concede i tiri agli avversari), in heatmap o zone. Le statistiche mostrano FG%, 3P% e eFG% con il piazzamento nella lega. Il roster elenca i giocatori con almeno 50 tiri in carriera; un clic porta alla vista Giocatore.
+
+### In generale
+- **Condividi**: link che riapre la stessa vista (modalità, stagione, filtri) e immagine della mappa da scaricare o condividere.
 - **Tema chiaro e scuro**.
-- **Responsive**: pensata per desktop e mobile.
+- **Responsive**, installabile sulla schermata Home come app.
 
 ## Come leggere i grafici
 
