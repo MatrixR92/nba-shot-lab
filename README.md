@@ -4,6 +4,18 @@ Mappe dei tiri NBA: shot chart, heatmap esagonali e statistiche per giocatore, s
 
 **Demo:** https://matrixr92.github.io/nba-shot-lab/
 
+## Anteprima
+
+![Vista giocatore: heatmap dei tiri](screenshots/giocatore.png)
+
+| Confronto tra giocatori | Vista squadra |
+| --- | --- |
+| ![Confronto tra due giocatori](screenshots/confronto.png) | ![Vista squadra con attacco, roster e leader](screenshots/squadra.png) |
+
+| Mobile | Tema chiaro |
+| --- | --- |
+| <img src="screenshots/mobile.png" width="300" alt="Vista giocatore su telefono"> | ![Tema chiaro](screenshots/chiaro.png) |
+
 ## Cosa fa
 
 Il sito ha tre modalità: **Giocatore**, **Confronto** e **Squadra**. Si parte dalla ricerca e tutto si può condividere con un link.
@@ -62,6 +74,8 @@ nba-shot-lab/
 ├── index.html            il sito (HTML, CSS e JavaScript in un solo file)
 ├── manifest.webmanifest  per aggiungerlo alla schermata Home
 ├── icons/                icone dell'app
+├── screenshots/          immagini per questo README
+├── og.jpg                immagine per l'anteprima del link
 ├── scripts/
 │   └── build_database.py script che scarica e prepara i dati
 └── data/                 file JSON generati dallo script
